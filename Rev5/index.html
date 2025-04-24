@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automotriz Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Pantalla de Login -->
+    <div id="loginScreen" class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Automotriz Pro</h2>
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Usuario:</label>
+                                <input type="text" class="form-control" id="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Contraseña:</label>
+                                <input type="password" class="form-control" id="password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla Principal (inicialmente oculta) -->
+    <div id="mainScreen" class="d-none">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+                    <div class="position-sticky pt-3">
+                        <div class="user-info text-light mb-4">
+                            <h5>Usuario: <span id="userDisplay"></span></h5>
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="darkModeSwitch">
+                            <label class="form-check-label text-light" for="darkModeSwitch">Modo Oscuro</label>
+                        </div>
+                        <button id="logoutBtn" class="btn btn-danger w-100 mb-3">Cerrar Sesión</button>
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active text-light" href="#" data-tab="clients">
+                                    <i class="fas fa-users"></i> Clientes
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" href="#" data-tab="mechanics">
+                                    <i class="fas fa-wrench"></i> Mecánicos
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" href="#" data-tab="analytics">
+                                    <i class="fas fa-chart-line"></i> Análisis
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contenido Principal -->
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                    <!-- Pestaña de Clientes -->
+                    <div id="clientsTab" class="tab-content">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Gestión de Clientes</h1>
+                        </div>
+                        
+                        <!-- Formulario de Cliente -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Nuevo Cliente</h5>
+                                <form id="clientForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Nombre:</label>
+                                            <input type="text" class="form-control" id="clientName" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Correo:</label>
+                                            <input type="email" class="form-control" id="clientEmail" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Modelo del Carro:</label>
+                                            <input type="text" class="form-control" id="carModel" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Revisión:</label>
+                                            <select class="form-select" id="revisionType" required>
+                                                <option value="Aceite">Aceite</option>
+                                                <option value="Frenos">Frenos</option>
+                                                <option value="Motor">Motor</option>
+                                                <option value="Suspensión">Suspensión</option>
+                                                <option value="Transmisión">Transmisión</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Agregar Cliente</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Tabla de Clientes -->
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Correo</th>
+                                        <th>Modelo</th>
+                                        <th>Revisión</th>
+                                        <th>Próxima Visita</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clientsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Modal de Detalles del Cliente -->
+                        <div class="modal fade" id="clientDetailsModal" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Detalles del Cliente</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Información del Cliente -->
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h6 class="card-subtitle mb-2 text-muted">Información Personal</h6>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p><strong>Nombre:</strong> <span id="modalClientName"></span></p>
+                                                        <p><strong>Correo:</strong> <span id="modalClientEmail"></span></p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p><strong>Modelo del Vehículo:</strong> <span id="modalCarModel"></span></p>
+                                                        <p><strong>Última Revisión:</strong> <span id="modalLastRevision"></span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Historial de Visitas -->
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h6 class="card-subtitle mb-2 text-muted">Historial de Visitas</h6>
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fecha</th>
+                                                                <th>Servicio</th>
+                                                                <th>Mecánico</th>
+                                                                <th>Costo</th>
+                                                                <th>Estado</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="visitHistoryTable">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Gráfico de Gastos -->
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6 class="card-subtitle mb-2 text-muted">Historial de Gastos</h6>
+                                                <canvas id="clientExpensesChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Gestión de Clientes</h5>
+                                <div class="d-flex justify-content-end mb-3">
+                                    <button class="btn btn-primary" onclick="showAppointmentModal()">
+                                        <i class="fas fa-calendar-plus"></i> Agendar Cita
+                                    </button>
+                                </div>
+                                <!-- Resto del contenido existente -->
+                            </div>
+                        </div>
+
+                        <!-- Modal para Agendar Citas -->
+                        <div class="modal fade" id="appointmentModal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Agendar Cita</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="appointmentForm">
+                                            <div class="mb-3">
+                                                <label class="form-label">Cliente:</label>
+                                                <select class="form-select" id="appointmentClient" required>
+                                                    <!-- Se llenará dinámicamente -->
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Fecha:</label>
+                                                <input type="date" class="form-control" id="appointmentDate" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Hora:</label>
+                                                <input type="time" class="form-control" id="appointmentTime" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Tipo de Servicio:</label>
+                                                <select class="form-select" id="appointmentService" required>
+                                                    <option value="Aceite">Cambio de Aceite</option>
+                                                    <option value="Frenos">Revisión de Frenos</option>
+                                                    <option value="Motor">Diagnóstico de Motor</option>
+                                                    <option value="Suspensión">Revisión de Suspensión</option>
+                                                    <option value="Transmisión">Servicio de Transmisión</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Notas:</label>
+                                                <textarea class="form-control" id="appointmentNotes" rows="3"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Agendar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Calendario de Citas -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Calendario de Citas</h5>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-calendar"></i>
+                                            </span>
+                                            <input type="month" class="form-control" id="calendarMonth">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Hora</th>
+                                                <th>Lunes</th>
+                                                <th>Martes</th>
+                                                <th>Miércoles</th>
+                                                <th>Jueves</th>
+                                                <th>Viernes</th>
+                                                <th>Sábado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="appointmentCalendar">
+                                            <!-- Se llenará dinámicamente -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pestaña de Mecánicos -->
+                    <div id="mechanicsTab" class="tab-content d-none">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Gestión de Mecánicos</h1>
+                        </div>
+                        
+                        <!-- Formulario de Mecánico -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Nuevo Mecánico</h5>
+                                <form id="mechanicForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Usuario:</label>
+                                            <input type="text" class="form-control" id="mechanicUsername" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Contraseña:</label>
+                                            <input type="password" class="form-control" id="mechanicPassword" required>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Agregar Mecánico</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Tabla de Mecánicos -->
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Usuario</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mechanicsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Pestaña de Análisis -->
+                    <div id="analyticsTab" class="tab-content d-none">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Análisis de Datos</h1>
+                        </div>
+
+                        <!-- Panel de Control -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Ingresar Datos de Mantenimiento</h5>
+                                        <form id="maintenanceDataForm">
+                                            <div class="mb-3">
+                                                <label class="form-label">Kilometraje:</label>
+                                                <input type="number" class="form-control" id="mileage" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Costo de Mantenimiento:</label>
+                                                <input type="number" class="form-control" id="maintenanceCost" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Tipo de Mantenimiento:</label>
+                                                <select class="form-select" id="maintenanceType" required>
+                                                    <option value="preventivo">Preventivo</option>
+                                                    <option value="correctivo">Correctivo</option>
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Agregar Dato</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Análisis de Costos</h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Período de Análisis:</label>
+                                                    <select class="form-select" id="analysisPeriod">
+                                                        <option value="3">Últimos 3 meses</option>
+                                                        <option value="6">Últimos 6 meses</option>
+                                                        <option value="12">Último año</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Tipo de Análisis:</label>
+                                                    <select class="form-select" id="analysisType">
+                                                        <option value="cost">Costos vs Kilometraje</option>
+                                                        <option value="frequency">Frecuencia de Mantenimientos</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary" onclick="generateAnalysis()">Generar Análisis</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gráficos y Resultados -->
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Gráfico de Regresión</h5>
+                                        <canvas id="regressionChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Estadísticas</h5>
+                                        <div id="statistics">
+                                            <p><strong>Pendiente de la Regresión:</strong> <span id="slope">-</span></p>
+                                            <p><strong>Intercepto:</strong> <span id="intercept">-</span></p>
+                                            <p><strong>R²:</strong> <span id="rSquared">-</span></p>
+                                            <p><strong>Predicción para 100,000 km:</strong> <span id="prediction">-</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Gestión de Inventario</h5>
+                        </div>
+                        <div class="card-body">
+                            <button class="btn btn-primary mb-3" onclick="showInventoryModal()">
+                                <i class="fas fa-boxes"></i> Agregar Pieza
+                            </button>
+                            <div class="table-responsive">
+                                <table class="table" id="inventoryTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Nombre</th>
+                                            <th>Categoría</th>
+                                            <th>Stock</th>
+                                            <th>Precio</th>
+                                            <th>Proveedor</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Reportes Avanzados</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <select class="form-select" id="reportType">
+                                        <option value="services">Servicios</option>
+                                        <option value="mechanics">Mecánicos</option>
+                                        <option value="inventory">Inventario</option>
+                                        <option value="vehicles">Vehículos</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="month" class="form-control" id="reportMonth">
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-primary" onclick="generateReport()">
+                                        Generar Reporte
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="reportContent"></div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Gestión de Vehículos</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="vehicleSearch" 
+                                           placeholder="Buscar por placa o cliente">
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-primary" onclick="searchVehicle()">
+                                        Buscar
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="vehicleDetails"></div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Inventario -->
+    <div class="modal fade" id="inventoryModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Pieza al Inventario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="inventoryForm">
+                        <div class="mb-3">
+                            <label class="form-label">Código</label>
+                            <input type="text" class="form-control" id="partCode" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="partName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Categoría</label>
+                            <select class="form-select" id="partCategory" required>
+                                <option value="motor">Motor</option>
+                                <option value="frenos">Frenos</option>
+                                <option value="electrico">Eléctrico</option>
+                                <option value="suspension">Suspensión</option>
+                                <option value="carroceria">Carrocería</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Stock</label>
+                            <input type="number" class="form-control" id="partStock" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Stock Mínimo</label>
+                            <input type="number" class="form-control" id="partMinStock" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Precio</label>
+                            <input type="number" class="form-control" id="partPrice" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Proveedor</label>
+                            <input type="text" class="form-control" id="partSupplier" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ubicación</label>
+                            <input type="text" class="form-control" id="partLocation">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveInventoryItem()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalles de Vehículo -->
+    <div class="modal fade" id="vehicleModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalles del Vehículo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Información Básica</h6>
+                            <p><strong>Placa:</strong> <span id="vehiclePlate"></span></p>
+                            <p><strong>Marca:</strong> <span id="vehicleMake"></span></p>
+                            <p><strong>Modelo:</strong> <span id="vehicleModel"></span></p>
+                            <p><strong>Año:</strong> <span id="vehicleYear"></span></p>
+                            <p><strong>Kilometraje:</strong> <span id="vehicleMileage"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Documentación</h6>
+                            <p><strong>SOAT:</strong> <span id="vehicleSoat"></span></p>
+                            <p><strong>Revisión Técnica:</strong> <span id="vehicleTechReview"></span></p>
+                            <p><strong>Próximo Mantenimiento:</strong> <span id="nextMaintenance"></span></p>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h6>Historial de Servicios</h6>
+                        <div class="table-responsive">
+                            <table class="table" id="vehicleHistoryTable">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Servicio</th>
+                                        <th>Mecánico</th>
+                                        <th>Piezas Usadas</th>
+                                        <th>Costo</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

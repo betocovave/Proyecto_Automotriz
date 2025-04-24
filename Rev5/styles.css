@@ -1,0 +1,287 @@
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Estilos del sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    margin: 0.2rem 0;
+    border-radius: 0.25rem;
+    transition: all 0.3s;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Estilos de las tarjetas */
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+/* Estilos de las tablas */
+.table {
+    background-color: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* Estilos del modo oscuro */
+body.dark-mode {
+    background-color: #212529;
+    color: #f8f9fa;
+}
+
+body.dark-mode .card {
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+body.dark-mode .table {
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+body.dark-mode .table thead th {
+    background-color: #212529;
+    color: #f8f9fa;
+}
+
+body.dark-mode .table td {
+    color: #f8f9fa;
+}
+
+/* Estilos de los botones */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* Estilos de los formularios */
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tab-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .sidebar {
+        position: static;
+        height: auto;
+        padding-top: 0;
+    }
+    
+    main {
+        margin-left: 0 !important;
+    }
+}
+
+/* Estilos para el calendario */
+.calendar-container {
+    margin-top: 2rem;
+    overflow-x: auto;
+}
+
+#appointmentCalendar {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#appointmentCalendar th,
+#appointmentCalendar td {
+    border: 1px solid #dee2e6;
+    padding: 0.5rem;
+    min-width: 120px;
+    height: 60px;
+    vertical-align: top;
+}
+
+#appointmentCalendar th {
+    background-color: #f8f9fa;
+    text-align: center;
+    font-weight: bold;
+}
+
+.appointment-card {
+    background-color: #e3f2fd;
+    border-radius: 4px;
+    padding: 0.25rem;
+    margin-bottom: 0.25rem;
+    font-size: 0.8rem;
+    border-left: 3px solid #1976d2;
+}
+
+.appointment-card.pendiente {
+    background-color: #fff3e0;
+    border-left-color: #f57c00;
+}
+
+.appointment-card.completada {
+    background-color: #e8f5e9;
+    border-left-color: #43a047;
+}
+
+.appointment-card.cancelada {
+    background-color: #ffebee;
+    border-left-color: #e53935;
+}
+
+/* Estilos para el formulario de citas */
+#appointmentForm .form-group {
+    margin-bottom: 1rem;
+}
+
+#appointmentForm select,
+#appointmentForm input[type="date"],
+#appointmentForm input[type="time"] {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+#appointmentForm textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Estilos para el inventario */
+#inventoryTable th {
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+}
+
+#inventoryTable .text-danger {
+    font-weight: bold;
+}
+
+/* Estilos para reportes */
+#reportContent {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+}
+
+#reportContent table {
+    margin-top: 1rem;
+}
+
+#reportContent h4 {
+    color: #0d6efd;
+    margin-bottom: 1rem;
+}
+
+/* Estilos para la gestión de vehículos */
+#vehicleDetails {
+    margin-top: 1rem;
+}
+
+#vehicleHistoryTable th {
+    background-color: #f8f9fa;
+}
+
+.vehicle-info-card {
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.vehicle-info-card h6 {
+    color: #0d6efd;
+    margin-bottom: 0.5rem;
+}
+
+/* Estilos para modales */
+.modal-content {
+    border-radius: 0.5rem;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Estilos para botones de acción */
+.btn-action {
+    margin-right: 0.25rem;
+}
+
+.btn-action:last-child {
+    margin-right: 0;
+}
+
+/* Estilos para alertas de stock bajo */
+.stock-alert {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/* Estilos para gráficos de reportes */
+.report-chart {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+} 

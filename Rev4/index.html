@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volkswagen - Sistema de Predicción de Citas</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/index.global.min.js"></script>
+</head>
+<body>
+    <!-- Pantalla de Login -->
+    <div id="login-container" class="container">
+        <div class="login-card">
+            <div class="logo-container">
+                <img src="/api/placeholder/200/100" alt="Volkswagen Logo" class="vw-logo">
+            </div>
+            <h2>Sistema de Mantenimiento</h2>
+            <div class="input-container">
+                <input type="text" id="username" placeholder="Usuario">
+                <i class="fa fa-user"></i>
+            </div>
+            <div class="input-container">
+                <input type="password" id="password" placeholder="Contraseña">
+                <i class="fa fa-lock"></i>
+            </div>
+            <button id="login-btn" class="gradient-button">Ingresar</button>
+            <div id="login-error" class="error-message"></div>
+        </div>
+    </div>
+
+    <!-- Panel Principal -->
+    <div id="main-container" class="hidden">
+        <header>
+            <div class="logo-container">
+                <img src="/api/placeholder/150/75" alt="Volkswagen Logo" class="vw-logo-small">
+            </div>
+            <div class="user-info">
+                <span id="user-name">Usuario</span>
+                <button id="logout-btn">Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <nav>
+            <ul>
+                <li><button id="dashboard-btn" class="nav-btn active"><i class="fas fa-chart-line"></i> Dashboard</button></li>
+                <li><button id="clients-btn" class="nav-btn"><i class="fas fa-users"></i> Clientes</button></li>
+                <li><button id="calendar-btn" class="nav-btn"><i class="far fa-calendar-alt"></i> Calendario</button></li>
+                <li id="mechanics-nav" class="hidden"><button id="mechanics-btn" class="nav-btn"><i class="fas fa-wrench"></i> Mecánicos</button></li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section">
+                <h2>Dashboard de Mantenimiento</h2>
+                <div class="metrics-container">
+                    <div class="metric-card">
+                        <h3>Citas Pendientes</h3>
+                        <p id="pending-appointments">0</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Clientes Totales</h3>
+                        <p id="total-clients">0</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Mecánicos Activos</h3>
+                        <p id="active-mechanics">0</p>
+                    </div>
+                </div>
+                
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3>Servicios más Frecuentes</h3>
+                        <canvas id="services-chart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Próximas Citas</h3>
+                        <div id="upcoming-appointments"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clients Section -->
+            <section id="clients-section" class="content-section hidden">
+                <h2>Gestión de Clientes</h2>
+                <div class="action-bar">
+                    <button id="add-client-btn" class="action-button">
+                        <i class="fas fa-plus"></i> Agregar Cliente
+                    </button>
+                    <div class="search-bar">
+                        <input type="text" id="client-search" placeholder="Buscar cliente...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="clients-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Vehículo</th>
+                                <th>Último Servicio</th>
+                                <th>Siguiente Cita</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clients-table-body">
+                            <!-- Client rows will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Calendar Section -->
+            <section id="calendar-section" class="content-section hidden">
+                <h2>Calendario de Citas</h2>
+                <div id="calendar"></div>
+            </section>
+
+            <!-- Mechanics Section (Admin only) -->
+            <section id="mechanics-section" class="content-section hidden">
+                <h2>Gestión de Mecánicos</h2>
+                <div class="action-bar">
+                    <button id="add-mechanic-btn" class="action-button">
+                        <i class="fas fa-plus"></i> Agregar Mecánico
+                    </button>
+                    <div class="search-bar">
+                        <input type="text" id="mechanic-search" placeholder="Buscar mecánico...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="mechanics-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Usuario</th>
+                                <th>Vehículo Asignado</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mechanics-table-body">
+                            <!-- Mechanic rows will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para Agregar/Editar Cliente -->
+    <div id="client-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 id="client-modal-title">Agregar Nuevo Cliente</h3>
+            <form id="client-form">
+                <div class="form-group">
+                    <label for="client-name">Nombre:</label>
+                    <input type="text" id="client-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="client-email">Correo:</label>
+                    <input type="email" id="client-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="client-phone">Teléfono:</label>
+                    <input type="tel" id="client-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="vehicle-model">Modelo:</label>
+                    <input type="text" id="vehicle-model" required>
+                </div>
+                <div class="form-group">
+                    <label for="vehicle-year">Año:</label>
+                    <input type="number" id="vehicle-year" min="1950" max="2025" required>
+                </div>
+                
+                <h4>Estado del Vehículo</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="suspension-status">Suspensiones:</label>
+                        <select id="suspension-status" required>
+                            <option value="excellent">Excelente</option>
+                            <option value="good">Bueno</option>
+                            <option value="fair">Regular</option>
+                            <option value="poor">Malo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="shocks-status">Amortiguadores:</label>
+                        <select id="shocks-status" required>
+                            <option value="excellent">Excelente</option>
+                            <option value="good">Bueno</option>
+                            <option value="fair">Regular</option>
+                            <option value="poor">Malo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="oil-status">Aceite:</label>
+                        <select id="oil-status" required>
+                            <option value="new">Nuevo</option>
+                            <option value="good">Bueno</option>
+                            <option value="needs_change">Necesita Cambio</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="coolant-status">Anticongelante:</label>
+                        <select id="coolant-status" required>
+                            <option value="good">Bueno</option>
+                            <option value="fair">Regular</option>
+                            <option value="needs_change">Necesita Cambio</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="last-revision">Fecha Última Revisión:</label>
+                    <input type="date" id="last-revision" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="service-type">Tipo de Servicio:</label>
+                    <select id="service-type" required>
+                        <option value="oil_change">Cambio de Aceite</option>
+                        <option value="major_service">Servicio Mayor</option>
+                        <option value="minor_service">Servicio Menor</option>
+                        <option value="brake_service">Servicio de Frenos</option>
+                        <option value="suspension">Revisión de Suspensión</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" id="cancel-client">Cancelar</button>
+                    <button type="submit" id="save-client" class="primary-button">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal para Agregar/Editar Mecánico -->
+    <div id="mechanic-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 id="mechanic-modal-title">Agregar Nuevo Mecánico</h3>
+            <form id="mechanic-form">
+                <div class="form-group">
+                    <label for="mechanic-name">Nombre:</label>
+                    <input type="text" id="mechanic-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="mechanic-username">Usuario:</label>
+                    <input type="text" id="mechanic-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="mechanic-password">Contraseña:</label>
+                    <input type="password" id="mechanic-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="assigned-vehicle">Vehículo Asignado:</label>
+                    <select id="assigned-vehicle">
+                        <option value="">Ninguno</option>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" id="cancel-mechanic">Cancelar</button>
+                    <button type="submit" id="save-mechanic" class="primary-button">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal para Agendar Cita -->
+    <div id="appointment-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Agendar Cita</h3>
+            <form id="appointment-form">
+                <div class="form-group">
+                    <label for="appointment-client">Cliente:</label>
+                    <select id="appointment-client" required>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-date">Fecha:</label>
+                    <input type="date" id="appointment-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-time">Hora:</label>
+                    <input type="time" id="appointment-time" required>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-service">Servicio:</label>
+                    <select id="appointment-service" required>
+                        <option value="oil_change">Cambio de Aceite</option>
+                        <option value="major_service">Servicio Mayor</option>
+                        <option value="minor_service">Servicio Menor</option>
+                        <option value="brake_service">Servicio de Frenos</option>
+                        <option value="suspension">Revisión de Suspensión</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-mechanic">Mecánico:</label>
+                    <select id="appointment-mechanic">
+                        <option value="">Asignar Automáticamente</option>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-notes">Notas:</label>
+                    <textarea id="appointment-notes"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" id="cancel-appointment">Cancelar</button>
+                    <button type="submit" id="save-appointment" class="primary-button">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Div para comunicación con R -->
+    <div id="r-prediction-data" style="display:none;"></div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

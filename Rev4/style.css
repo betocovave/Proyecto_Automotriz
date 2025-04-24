@@ -1,0 +1,499 @@
+/* Variables de colores de Volkswagen */
+:root {
+    --vw-blue: #001e50;
+    --vw-light-blue: #2773b2;
+    --vw-white: #ffffff;
+    --vw-light-gray: #f1f1f1;
+    --vw-gray: #6c757d;
+    --vw-dark-gray: #343a40;
+    --vw-black: #000000;
+    --vw-accent: #6bc3ff;
+    --vw-error: #e60000;
+    --vw-success: #00b74a;
+    --vw-warning: #ffd700;
+}
+
+/* Estilos generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--vw-light-gray);
+    color: var(--vw-dark-gray);
+    line-height: 1.6;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+h2, h3, h4 {
+    color: var(--vw-blue);
+    margin-bottom: 1rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Estilos de Login */
+.login-card {
+    background-color: var(--vw-white);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.logo-container {
+    margin-bottom: 1.5rem;
+}
+
+.vw-logo {
+    max-width: 180px;
+}
+
+.vw-logo-small {
+    max-width: 120px;
+}
+
+.input-container {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    border: 1px solid var(--vw-light-gray);
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.input-container input:focus {
+    border-color: var(--vw-light-blue);
+    outline: none;
+}
+
+.input-container i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--vw-gray);
+}
+
+.gradient-button {
+    background: linear-gradient(to right, var(--vw-blue), var(--vw-light-blue));
+    color: var(--vw-white);
+    border: none;
+    border-radius: 5px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 600;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.gradient-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 30, 80, 0.3);
+}
+
+.error-message {
+    color: var(--vw-error);
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+/* Layout principal */
+#main-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--vw-white);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+#user-name {
+    font-weight: 500;
+}
+
+#logout-btn {
+    background-color: transparent;
+    color: var(--vw-blue);
+    border: 1px solid var(--vw-blue);
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#logout-btn:hover {
+    background-color: var(--vw-blue);
+    color: var(--vw-white);
+}
+
+/* Navegación */
+nav {
+    background-color: var(--vw-blue);
+    color: var(--vw-white);
+    padding: 0 2rem;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+.nav-btn {
+    background-color: transparent;
+    color: var(--vw-white);
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-btn.active {
+    background-color: var(--vw-light-blue);
+    font-weight: 500;
+}
+
+/* Contenido principal */
+main {
+    flex: 1;
+    padding: 2rem;
+}
+
+.content-section {
+    background-color: var(--vw-white);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
+
+/* Dashboard */
+.metrics-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.metric-card {
+    background-color: var(--vw-light-gray);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.metric-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.metric-card p {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--vw-light-blue);
+}
+
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+}
+
+.chart-card {
+    background-color: var(--vw-light-gray);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+#upcoming-appointments {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Estilos de tablas */
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.action-button {
+    background-color: var(--vw-light-blue);
+    color: var(--vw-white);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s;
+}
+
+.action-button:hover {
+    background-color: var(--vw-blue);
+}
+
+.search-bar {
+    position: relative;
+    width: 300px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 35px 10px 15px;
+    border: 1px solid var(--vw-light-gray);
+    border-radius: 5px;
+}
+
+.search-bar i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--vw-gray);
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--vw-light-gray);
+}
+
+th {
+    background-color: var(--vw-blue);
+    color: var(--vw-white);
+}
+
+tbody tr {
+    transition: background-color 0.3s;
+}
+
+tbody tr:hover {
+    background-color: var(--vw-light-gray);
+}
+
+.table-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn, .delete-btn, .view-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.edit-btn {
+    color: var(--vw-light-blue);
+}
+
+.delete-btn {
+    color: var(--vw-error);
+}
+
+.view-btn {
+    color: var(--vw-success);
+}
+
+/* Calendario */
+#calendar {
+    height: 650px;
+}
+
+.fc-event {
+    cursor: pointer;
+    background-color: var(--vw-light-blue);
+    border: none;
+}
+
+.fc-day-today {
+    background-color: rgba(0, 30, 80, 0.05) !important;
+}
+
+/* Modales */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--vw-white);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--vw-gray);
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--vw-light-gray);
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.form-actions button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#cancel-client, #cancel-mechanic, #cancel-appointment {
+    background-color: var(--vw-light-gray);
+    color: var(--vw-dark-gray);
+    border: none;
+}
+
+.primary-button {
+    background-color: var(--vw-light-blue);
+    color: var(--vw-white);
+    border: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .charts-container, .metrics-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    nav ul {
+        flex-direction: column;
+    }
+    
+    .action-bar {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .search-bar {
+        width: 100%;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.animated {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Apariencia de elementos del calendario */
+.appointment-event {
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 0.9rem;
+}

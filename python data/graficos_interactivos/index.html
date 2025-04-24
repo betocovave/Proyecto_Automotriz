@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizaciones Interactivas - Talleres Automotrices</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #f5f7fa;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 20px;
+        }
+        .vis-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .vis-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f0f4f8;
+            border-radius: 5px;
+            border-left: 5px solid #3498db;
+            transition: transform 0.2s;
+        }
+        .vis-item:hover {
+            transform: translateX(5px);
+            background: #e8f0fe;
+        }
+        .vis-link {
+            display: block;
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .vis-link:hover {
+            color: #3498db;
+            text-decoration: underline;
+        }
+        .vis-desc {
+            margin-top: 8px;
+            color: #555;
+        }
+        .info {
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #e8f4f8;
+            border-left: 5px solid #2cc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Visualizaciones Interactivas - Talleres Automotrices</h1>
+    <div class="container">
+        <p>En esta página puedes acceder a todas las visualizaciones interactivas generadas para el análisis de talleres automotrices. Cada visualización te permite explorar los datos de diferentes maneras, incluyendo filtros, hover para más información y zoom.</p>
+        
+        <h2>Visualizaciones Disponibles</h2>
+        <ul class="vis-list">
+            <li class="vis-item">
+                <a href="eficiencia_vs_reparaciones_interactivo.html" class="vis-link">Eficiencia vs Reparaciones por Tipo de Taller</a>
+                <p class="vis-desc">Visualiza la relación entre la eficiencia y el número de reparaciones realizadas. El tamaño de los puntos representa el número de mecánicos disponibles.</p>
+            </li>
+            <li class="vis-item">
+                <a href="capacitacion_vs_tiempo_reparacion_interactivo.html" class="vis-link">Capacitación vs Tiempo de Reparación vs Productividad</a>
+                <p class="vis-desc">Explora cómo el nivel de capacitación de los técnicos influye en el tiempo de reparación. El tamaño de los puntos representa el número de reparaciones realizadas.</p>
+            </li>
+            <li class="vis-item">
+                <a href="relacion_3d_interactivo.html" class="vis-link">Visualización 3D de Eficiencia, Capacitación y Reparaciones</a>
+                <p class="vis-desc">Gráfico tridimensional que muestra la relación entre eficiencia, capacitación de técnicos y reparaciones realizadas. Puedes rotar, hacer zoom y filtrar por tipo de taller.</p>
+            </li>
+            <li class="vis-item">
+                <a href="dashboard_talleres_completo.html" class="vis-link">Dashboard Completo de Talleres</a>
+                <p class="vis-desc">Panel interactivo que incluye una tabla de datos y múltiples gráficos comparativos entre los diferentes tipos de talleres.</p>
+            </li>
+            <li class="vis-item">
+                <a href="tabla_completa_datos.html" class="vis-link">Tabla Completa de Datos</a>
+                <p class="vis-desc">Visualiza todos los datos del dataset en formato de tabla interactiva. Puedes ordenar, filtrar y explorar todos los 65 registros con sus 11 variables.</p>
+            </li>
+        </ul>
+        
+        <div class="info">
+            <p><strong>Nota:</strong> Estas visualizaciones son interactivas. Puedes hacer clic, arrastrar, hacer zoom, filtrar y pasar el cursor sobre los elementos para ver información adicional.</p>
+        </div>
+    </div>
+</body>
+</html>
