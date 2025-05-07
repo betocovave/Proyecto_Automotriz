@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volkswagen Taller Pro</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- External JS Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+</head>
+<body>
+    <!-- Pantalla de Login -->
+    <div id="loginScreen" class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5 col-xl-4">
+                <div class="card shadow-lg">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="text-center mb-4">
+                            <!-- Placeholder para el logo de Volkswagen -->
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/100px-Volkswagen_logo_2019.svg.png" alt="Volkswagen Logo" style="max-height: 70px; margin-bottom: 15px;">
+                            <h2 class="fw-bold">Volkswagen Taller Pro</h2>
+                        </div>
+                        <form id="loginForm">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="username" placeholder="Usuario" required value="admin">
+                                <label for="username">Usuario</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="password" placeholder="Contraseña" required value="1303">
+                                <label for="password">Contraseña</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla Principal (inicialmente oculta) -->
+    <div id="mainScreen" class="d-none">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar -->
+                <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+                    <div class="position-sticky pt-3">
+                        <div class="user-info text-center text-light mb-4 px-3">
+                            <i class="fas fa-user-circle fa-2x mb-2"></i>
+                            <h5><span id="userDisplay"></span></h5>
+                            <hr class="text-secondary">
+                        </div>
+                        <ul class="nav flex-column">
+                             <li class="nav-item">
+                                <a class="nav-link active" href="#" data-tab="dashboard"> <!-- Nueva pestaña Dashboard -->
+                                    <i class="fas fa-tachometer-alt fa-fw"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-tab="services"> <!-- Nueva pestaña Servicios -->
+                                    <i class="fas fa-tools fa-fw"></i> Órdenes de Servicio
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-tab="clients">
+                                    <i class="fas fa-users fa-fw"></i> Clientes
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-tab="appointments">
+                                    <i class="fas fa-calendar-alt fa-fw"></i> Citas
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-tab="vehicles">
+                                    <i class="fas fa-car fa-fw"></i> Vehículos
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-tab="inventory">
+                                    <i class="fas fa-boxes fa-fw"></i> Inventario
+                                </a>
+                            </li>
+                             <li class="nav-item admin-only"> <!-- Hide if not admin -->
+                                <a class="nav-link" href="#" data-tab="mechanics">
+                                    <i class="fas fa-wrench fa-fw"></i> Mecánicos
+                                </a>
+                            </li>
+                            <li class="nav-item admin-only"> <!-- Hide if not admin -->
+                                <a class="nav-link" href="#" data-tab="analytics">
+                                    <i class="fas fa-chart-line fa-fw"></i> Análisis
+                                </a>
+                            </li>
+                             <li class="nav-item admin-only"> <!-- Hide if not admin -->
+                                <a class="nav-link" href="#" data-tab="reports">
+                                    <i class="fas fa-file-alt fa-fw"></i> Reportes
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="sidebar-bottom px-3 mt-auto pt-3 pb-3">
+                             <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="darkModeSwitch" role="switch">
+                                <label class="form-check-label text-light" for="darkModeSwitch">Modo Oscuro</label>
+                            </div>
+                            <button id="logoutBtn" class="btn btn-danger w-100">
+                                <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Contenido Principal -->
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                    <!-- Pestaña Dashboard (Nueva) -->
+                    <div id="dashboardTab" class="tab-content">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Dashboard</h1>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card text-white bg-primary">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h5 class="card-title mb-0">Órdenes Activas</h5>
+                                                <p class="card-text fs-2 fw-bold" id="activeOrdersCount">0</p>
+                                            </div>
+                                            <i class="fas fa-cogs fa-3x opacity-50"></i>
+                                        </div>
+                                    </div>
+                                    <a href="#" class="card-footer text-white text-decoration-none" onclick="document.querySelector('[data-tab=\'services\']').click();">
+                                        Ver Detalles <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card text-white bg-success">
+                                    <div class="card-body">
+                                         <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h5 class="card-title mb-0">Citas Hoy</h5>
+                                                <p class="card-text fs-2 fw-bold" id="todayAppointmentsCount">0</p>
+                                            </div>
+                                            <i class="fas fa-calendar-check fa-3x opacity-50"></i>
+                                        </div>
+                                    </div>
+                                     <a href="#" class="card-footer text-white text-decoration-none" onclick="document.querySelector('[data-tab=\'appointments\']').click();">
+                                        Ver Calendario <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card text-white bg-warning">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h5 class="card-title mb-0">Stock Bajo</h5>
+                                                <p class="card-text fs-2 fw-bold" id="lowStockItemsCount">0</p>
+                                            </div>
+                                             <i class="fas fa-exclamation-triangle fa-3x opacity-50"></i>
+                                        </div>
+                                    </div>
+                                    <a href="#" class="card-footer text-white text-decoration-none" onclick="document.querySelector('[data-tab=\'inventory\']').click();">
+                                        Ver Inventario <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">Próximas Citas (Hoy y Mañana)</div>
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-hover mb-0">
+                                                <thead>
+                                                    <tr><th>Hora</th><th>Cliente</th><th>Vehículo</th><th>Servicio</th><th>Estado</th></tr>
+                                                </thead>
+                                                <tbody id="upcomingAppointmentsTable">
+                                                    <tr><td colspan="5" class="text-center p-3">Cargando próximas citas...</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- Fin Pestaña Dashboard -->
+
+
+                    <!-- Pestaña Órdenes de Servicio (Nueva) -->
+                    <div id="servicesTab" class="tab-content d-none">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Órdenes de Servicio</h1>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#serviceOrderModal" onclick="prepareServiceOrderModal()">
+                                <i class="fas fa-plus me-1"></i> Nueva Orden
+                            </button>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">Lista de Órdenes de Servicio</div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>ID Orden</th>
+                                                <th>Cliente</th>
+                                                <th>Vehículo (Placa)</th>
+                                                <th>Fecha Ingreso</th>
+                                                <th>Mecánico Asignado</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="serviceOrdersTableBody">
+                                            <!-- Las órdenes de servicio se cargarán aquí -->
+                                            <tr><td colspan="7" class="text-center p-5"><div class="loading-spinner mx-auto"></div> Cargando órdenes...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- Fin Pestaña Órdenes de Servicio -->
+
+
+                    <!-- Pestaña de Clientes -->
+                    <div id="clientsTab" class="tab-content d-none">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Gestión de Clientes</h1>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClientModal">
+                                <i class="fas fa-plus me-1"></i> Nuevo Cliente
+                            </button>
+                        </div>
+
+                        <!-- Tabla de Clientes -->
+                        <div class="card">
+                             <div class="card-header">Lista de Clientes</div>
+                             <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>Correo</th>
+                                                <th>Vehículo</th>
+                                                <th>Placa</th>
+                                                <th>Próx. Visita</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="clientsTableBody">
+                                            <tr><td colspan="7" class="text-center p-5"><div class="loading-spinner mx-auto"></div> Cargando...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- End Clients Tab -->
+
+                     <!-- Pestaña de Citas -->
+                    <div id="appointmentsTab" class="tab-content d-none">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Gestión de Citas</h1>
+                             <button class="btn btn-primary" onclick="showAppointmentModal()">
+                                <i class="fas fa-calendar-plus me-1"></i> Agendar Cita
+                            </button>
+                        </div>
+
+                        <!-- Calendario de Citas -->
+                        <div class="card">
+                             <div class="card-header">
+                                Calendario de Citas
+                                <div class="ms-auto col-md-4">
+                                    <input type="month" class="form-control form-control-sm" id="calendarMonth">
+                                </div>
+                             </div>
+                            <div class="card-body">
+                                <div class="calendar-container table-responsive">
+                                    <table class="calendar-table table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Lunes</th>
+                                                <th>Martes</th>
+                                                <th>Miércoles</th>
+                                                <th>Jueves</th>
+                                                <th>Viernes</th>
+                                                <th>Sábado</th>
+                                                <th>Domingo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="appointmentCalendar">
+                                             <tr><td colspan="7" class="text-center p-5"><div class="loading-spinner mx-auto"></div> Cargando calendario...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- End Appointments Tab -->
+
+                     <!-- Pestaña de Vehículos -->
+                    <div id="vehiclesTab" class="tab-content d-none">
+                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Gestión de Vehículos</h1>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-header">Buscar Vehículo</div>
+                            <div class="card-body">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="vehicleSearch" placeholder="Buscar por placa o nombre de cliente...">
+                                    <button class="btn btn-primary" type="button" id="vehicleSearchBtn" onclick="searchVehicle()">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                </div>
+                                <div id="vehicleSearchResults">
+                                    <p class="text-muted">Ingrese un término de búsqueda para encontrar vehículos.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- End Vehicles Tab -->
+
+
+                     <!-- Pestaña de Inventario -->
+                    <div id="inventoryTab" class="tab-content d-none">
+                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Gestión de Inventario</h1>
+                            <button class="btn btn-primary" onclick="showInventoryModal()"> <!-- Calls function directly -->
+                                <i class="fas fa-plus me-1"></i> Agregar Pieza
+                            </button>
+                        </div>
+                         <div class="card">
+                             <div class="card-header">Inventario de Piezas</div>
+                             <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover mb-0" id="inventoryTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Código</th>
+                                                <th>Nombre</th>
+                                                <th>Categoría</th>
+                                                <th>Stock Actual</th>
+                                                <th>Stock Mínimo</th>
+                                                <th>Precio Unit.</th>
+                                                <th>Proveedor</th>
+                                                <th>Ubicación</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="inventoryTableBody">
+                                             <!-- Filled by script.js -->
+                                             <tr><td colspan="9" class="text-center p-5"><div class="loading-spinner mx-auto"></div> Cargando inventario...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- End Inventory Tab -->
+
+
+                    <!-- Pestaña de Mecánicos (Admin Only) -->
+                    <div id="mechanicsTab" class="tab-content d-none admin-only">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Gestión de Mecánicos</h1>
+                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMechanicModal">
+                                <i class="fas fa-plus me-1"></i> Nuevo Mecánico
+                            </button>
+                        </div>
+                         <div class="card">
+                             <div class="card-header">Lista de Mecánicos</div>
+                             <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Usuario</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="mechanicsTableBody">
+                                             <!-- Filled by script.js -->
+                                             <tr><td colspan="3" class="text-center p-5"><div class="loading-spinner mx-auto"></div> Cargando mecánicos...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- End Mechanics Tab -->
+
+
+                    <!-- Pestaña de Análisis (Admin Only) -->
+                    <div id="analyticsTab" class="tab-content d-none admin-only">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Análisis de Datos</h1>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-header">Análisis de Costos de Mantenimiento</div>
+                            <div class="card-body">
+                                <form id="analysisControlForm" class="row g-3 align-items-end">
+                                     <div class="col-md-4">
+                                        <label for="analysisPeriod" class="form-label">Período:</label>
+                                        <select class="form-select" id="analysisPeriod">
+                                            <option value="3">Últimos 3 meses</option>
+                                            <option value="6" selected>Últimos 6 meses</option>
+                                            <option value="12">Último año</option>
+                                            <option value="24">Últimos 2 años</option>
+                                            <option value="999">Todo el historial</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="analysisType" class="form-label">Tipo de Análisis:</label>
+                                        <select class="form-select" id="analysisType" disabled>
+                                            <option value="cost" selected>Costos vs Kilometraje (Regresión)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn btn-primary w-100" onclick="generateAnalysis()">
+                                            <i class="fas fa-sync-alt me-1"></i> Generar Análisis
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                             <div class="col-lg-8">
+                                <div class="card h-100">
+                                    <div class="card-header">Gráfico de Regresión (Costo vs Kilometraje)</div>
+                                    <div class="card-body">
+                                        <div class="chart-container" style="height: 350px;">
+                                             <canvas id="regressionChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card h-100">
+                                    <div class="card-header">Estadísticas de Regresión</div>
+                                    <div class="card-body" id="statistics">
+                                        <p class="mb-2"><strong>Pendiente (Costo/km):</strong> <span id="slope" class="fw-bold">-</span></p>
+                                        <p class="mb-2"><strong>Intercepto (Costo Base):</strong> <span id="intercept" class="fw-bold">-</span></p>
+                                        <p class="mb-2"><strong>Coef. Determinación (R²):</strong> <span id="rSquared" class="fw-bold">-</span></p>
+                                        <hr>
+                                        <p class="mb-0"><strong>Predicción Costo a 100,000 km:</strong> <span id="prediction" class="fw-bold text-success fs-5">-</span></p>
+                                         <small class="text-muted">(Basado en el modelo de regresión actual)</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-4 admin-only">
+                            <div class="card-header">Ingresar Datos de Mantenimiento Manualmente</div>
+                            <div class="card-body">
+                                <form id="maintenanceDataForm">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="mileage" class="form-label">Kilometraje <span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" id="mileage" required min="0">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="maintenanceCost" class="form-label">Costo ($) <span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" id="maintenanceCost" required min="0" step="0.01">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="maintenanceType" class="form-label">Tipo <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="maintenanceType" required>
+                                                <option value="preventivo">Preventivo</option>
+                                                <option value="correctivo">Correctivo</option>
+                                                 <option value="diagnostico">Diagnóstico</option>
+                                                 <option value="otro">Otro</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-secondary">
+                                        <i class="fas fa-plus me-1"></i>Agregar Dato Manual
+                                    </button>
+                                    <small class="ms-2 text-muted">(Usar para análisis si no hay datos de citas)</small>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card mb-4 admin-only">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="fas fa-brain me-2"></i>Análisis Predictivo Avanzado (TensorFlow.js)</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="predictiveAnalysisReactRoot">
+                                     <div class="text-center p-5"><div class="loading-spinner mx-auto"></div> Cargando componente predictivo...</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-4 admin-only">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0"><i class="fas fa-balance-scale me-2"></i>Comparativa de Talleres</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="workshopComparisonReactRoot">
+                                     <div class="text-center p-5"><div class="loading-spinner mx-auto"></div> Cargando componente de comparación...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- End Analytics Tab -->
+
+                    <!-- Pestaña de Reportes (Admin Only) -->
+                     <div id="reportsTab" class="tab-content d-none admin-only">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Reportes Avanzados</h1>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-header">Generar Reporte Mensual</div>
+                            <div class="card-body">
+                                <div class="row g-3 align-items-end">
+                                    <div class="col-md-4">
+                                        <label for="reportType" class="form-label">Tipo de Reporte</label>
+                                        <select class="form-select" id="reportType">
+                                            <option value="services" selected>Servicios Realizados</option>
+                                            <option value="mechanics">Rendimiento Mecánicos</option>
+                                            <option value="inventory">Estado de Inventario</option>
+                                            <option value="vehicles">Resumen de Vehículos</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                         <label for="reportMonth" class="form-label">Mes</label>
+                                        <input type="month" class="form-control" id="reportMonth">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button class="btn btn-primary w-100" id="generateReportBtn" onclick="generateReport()">
+                                            <i class="fas fa-cogs me-1"></i> Generar Reporte
+                                        </button>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div id="reportContent">
+                                     <p class="text-muted text-center mt-3">Seleccione el tipo de reporte y el mes, luego presione "Generar Reporte".</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0"><i class="fas fa-file-export me-2"></i>Exportación Avanzada (Historial Completo)</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3 align-items-end">
+                                    <div class="col-md-3">
+                                        <label for="exportFormat" class="form-label">Formato:</label>
+                                        <select class="form-select" id="exportFormat" onchange="document.getElementById('includeGraphics').disabled = (this.value !== 'pdf')">
+                                            <option value="csv" selected>CSV (Compatible Excel)</option>
+                                            <option value="json">JSON</option>
+                                            <option value="pdf">PDF</option>
+                                            <option value="excel" disabled>Excel (Próximamente)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="includeGraphics" class="form-label">Incluir Gráficos:</label>
+                                        <select class="form-select" id="includeGraphics" disabled>
+                                            <option value="yes">Sí (si aplica)</option>
+                                            <option value="no" selected>No</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="detailLevel" class="form-label">Nivel Detalle:</label>
+                                        <select class="form-select" id="detailLevel">
+                                            <option value="summary">Resumen</option>
+                                            <option value="detailed" selected>Detallado</option>
+                                            <option value="complete">Completo (Todos los Campos)</option>
+                                        </select>
+                                    </div>
+                                     <div class="col-md-3">
+                                        <button class="btn btn-success w-100" id="exportAdvancedReportBtn" onclick="exportAdvancedReport()">
+                                            <i class="fas fa-download me-1"></i> Exportar Datos
+                                        </button>
+                                    </div>
+                                </div>
+                                <small class="text-muted d-block mt-2">Exporta el historial completo de mantenimientos según el nivel de detalle seleccionado.</small>
+                            </div>
+                        </div>
+                    </div> <!-- End Reports Tab -->
+
+                </main>
+            </div> <!-- End Row -->
+        </div> <!-- End Container Fluid -->
+    </div> <!-- End Main Screen -->
+
+    <!-- Modales Globales -->
+    <div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="clientForm">
+                    <div class="modal-header"><h5 class="modal-title" id="addClientModalLabel">Agregar Nuevo Cliente</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                    <div class="modal-body">
+                        <h6>Información del Cliente</h6>
+                        <div class="row"><div class="col-md-6 mb-3"><label for="clientName" class="form-label">Nombre <span class="text-danger">*</span></label><input type="text" class="form-control" id="clientName" required></div><div class="col-md-6 mb-3"><label for="clientEmail" class="form-label">Correo</label><input type="email" class="form-control" id="clientEmail"></div></div><hr>
+                        <h6>Información del Vehículo</h6>
+                        <div class="row"><div class="col-md-4 mb-3"><label for="clientPlate" class="form-label">Placa <span class="text-danger">*</span></label><input type="text" class="form-control text-uppercase" id="clientPlate" required></div><div class="col-md-4 mb-3"><label for="carMake" class="form-label">Marca <span class="text-danger">*</span></label><input type="text" class="form-control" id="carMake" required></div><div class="col-md-4 mb-3"><label for="carModel" class="form-label">Modelo <span class="text-danger">*</span></label><input type="text" class="form-control" id="carModel" required></div></div>
+                        <div class="row"><div class="col-md-4 mb-3"><label for="carYear" class="form-label">Año</label><input type="number" class="form-control" id="carYear" min="1900" max="2100"></div><div class="col-md-4 mb-3"><label for="carMileage" class="form-label">Kilometraje Actual</label><input type="number" class="form-control" id="carMileage" min="0"></div><div class="col-md-4 mb-3"><label for="revisionType" class="form-label">Motivo Visita Inicial</label><select class="form-select" id="revisionType" required><option value="" selected disabled>Seleccione...</option><option value="Aceite">Aceite</option><option value="Frenos">Frenos</option><option value="Motor">Motor</option><option value="Suspensión">Suspensión</option><option value="Transmisión">Transmisión</option><option value="General">Revisión General</option><option value="Otro">Otro</option></select></div></div>
+                        <div class="row"><div class="col-md-6 mb-3"><label for="carSoat" class="form-label">Vencimiento SOAT</label><input type="date" class="form-control" id="carSoat"></div><div class="col-md-6 mb-3"><label for="carTechReview" class="form-label">Vencimiento Rev. Técnica</label><input type="date" class="form-control" id="carTechReview"></div></div>
+                    </div>
+                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Agregar Cliente</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="clientDetailsModal" tabindex="-1" aria-labelledby="clientDetailsModalLabel" aria-hidden="true" data-client-id="">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title" id="clientDetailsModalLabel">Detalles del Cliente y Vehículo</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                <div class="modal-body">
+                    <div class="card mb-3"><div class="card-body"><div class="row"><div class="col-md-6"><h6>Información del Cliente</h6><p class="mb-1"><strong>Nombre:</strong> <span id="modalClientName">-</span></p><p class="mb-1"><strong>Correo:</strong> <span id="modalClientEmail">-</span></p></div><div class="col-md-6"><h6>Información del Vehículo</h6><p class="mb-1"><strong>Vehículo:</strong> <span id="modalCarInfo">-</span></p><p class="mb-1"><strong>Última Revisión/Motivo:</strong> <span id="modalLastRevision">-</span></p></div></div></div></div>
+                    <div class="card mb-3"><div class="card-header">Historial de Mantenimientos</div><div class="card-body p-0"><div class="table-responsive"><table class="table table-sm table-striped mb-0"><thead><tr><th>Fecha</th><th>Tipo</th><th>Kilometraje</th><th>Costo</th><th>Estado</th><th>Mecánico</th></tr></thead><tbody id="visitHistoryTable"><tr><td colspan="6" class="text-center p-3"><div class="loading-spinner mx-auto"></div> Cargando historial...</td></tr></tbody></table></div></div></div>
+                    <div id="clientExpensesChartContainer" class="card admin-only d-none"><div class="card-header">Historial de Gastos Mensuales</div><div class="card-body"><div class="chart-container" style="height: 250px;"><canvas id="clientExpensesChart"></canvas></div></div></div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-outline-primary" onclick="exportClientToPdf()"><i class="fas fa-file-pdf me-1"></i> PDF</button><button type="button" class="btn btn-outline-success" onclick="exportClientToCsv()"><i class="fas fa-file-csv me-1"></i> CSV</button><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="appointmentForm">
+                    <div class="modal-header"><h5 class="modal-title" id="appointmentModalLabel">Agendar Cita</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                    <div class="modal-body"><div class="mb-3"><label for="appointmentClient" class="form-label">Cliente <span class="text-danger">*</span></label><select class="form-select" id="appointmentClient" required><option value="">Cargando clientes...</option></select></div><div class="row"><div class="col-md-6 mb-3"><label for="appointmentDate" class="form-label">Fecha <span class="text-danger">*</span></label><input type="date" class="form-control" id="appointmentDate" required></div><div class="col-md-6 mb-3"><label for="appointmentTime" class="form-label">Hora <span class="text-danger">*</span></label><input type="time" class="form-control" id="appointmentTime" required min="08:00" max="18:00" step="1800"></div></div><div class="mb-3"><label for="appointmentService" class="form-label">Tipo de Servicio <span class="text-danger">*</span></label><select class="form-select" id="appointmentService" required><option value="" selected disabled>Seleccione...</option><option value="Aceite">Cambio de Aceite</option><option value="Frenos">Revisión de Frenos</option><option value="Motor">Diagnóstico de Motor</option><option value="Suspensión">Revisión de Suspensión</option><option value="Transmisión">Servicio de Transmisión</option><option value="Llantas">Rotación/Balanceo Llantas</option><option value="General">Mantenimiento General</option><option value="Otro">Otro</option></select></div><div class="mb-3"><label for="appointmentNotes" class="form-label">Notas Adicionales</label><textarea class="form-control" id="appointmentNotes" rows="3"></textarea></div></div>
+                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Agendar Cita</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addMechanicModal" tabindex="-1" aria-labelledby="addMechanicModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="mechanicForm">
+                    <div class="modal-header"><h5 class="modal-title" id="addMechanicModalLabel">Agregar Nuevo Mecánico</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                    <div class="modal-body"><div class="mb-3"><label for="mechanicUsername" class="form-label">Nombre de Usuario <span class="text-danger">*</span></label><input type="text" class="form-control" id="mechanicUsername" required></div><div class="mb-3"><label for="mechanicPassword" class="form-label">Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="mechanicPassword" required></div></div>
+                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Agregar Mecánico</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="inventoryModal" tabindex="-1" aria-labelledby="inventoryModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="inventoryForm"><input type="hidden" id="editItemId">
+                    <div class="modal-header"><h5 class="modal-title" id="inventoryModalTitle">Agregar Pieza al Inventario</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                    <div class="modal-body"><div class="row"><div class="col-md-4 mb-3"><label for="partCode" class="form-label">Código <span class="text-danger">*</span></label><input type="text" class="form-control" id="partCode" required></div><div class="col-md-8 mb-3"><label for="partName" class="form-label">Nombre <span class="text-danger">*</span></label><input type="text" class="form-control" id="partName" required></div></div><div class="row"><div class="col-md-6 mb-3"><label for="partCategory" class="form-label">Categoría <span class="text-danger">*</span></label><select class="form-select" id="partCategory" required><option value="" selected disabled>Seleccione...</option><option value="Motor">Motor</option><option value="Frenos">Frenos</option><option value="Eléctrico">Eléctrico</option><option value="Suspensión">Suspensión</option><option value="Transmisión">Transmisión</option><option value="Carrocería">Carrocería</option><option value="Filtros">Filtros</option><option value="Fluidos">Fluidos</option><option value="Llantas">Llantas</option><option value="Otros">Otros</option></select></div><div class="col-md-6 mb-3"><label for="partSupplier" class="form-label">Proveedor</label><input type="text" class="form-control" id="partSupplier"></div></div><div class="row"><div class="col-md-4 mb-3"><label for="partStock" class="form-label">Stock Actual <span class="text-danger">*</span></label><input type="number" class="form-control" id="partStock" required min="0"></div><div class="col-md-4 mb-3"><label for="partMinStock" class="form-label">Stock Mínimo <span class="text-danger">*</span></label><input type="number" class="form-control" id="partMinStock" required min="0"></div><div class="col-md-4 mb-3"><label for="partPrice" class="form-label">Precio Unit. ($) <span class="text-danger">*</span></label><input type="number" class="form-control" id="partPrice" required min="0" step="0.01"></div></div><div class="mb-3"><label for="partLocation" class="form-label">Ubicación en Almacén</label><input type="text" class="form-control" id="partLocation"></div></div>
+                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" id="saveInventoryBtn" onclick="saveInventoryItem()">Guardar Pieza</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="vehicleModal" tabindex="-1" aria-labelledby="vehicleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title" id="vehicleModalLabel">Detalles del Vehículo</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                <div class="modal-body"><div class="row"><div class="col-lg-6"><div class="vehicle-info-card mb-3"><h6><i class="fas fa-car me-2"></i>Información Básica</h6><p class="mb-1"><strong>Placa:</strong> <span id="vehiclePlate">-</span></p><p class="mb-1"><strong>Marca:</strong> <span id="vehicleMake">-</span></p><p class="mb-1"><strong>Modelo:</strong> <span id="vehicleModel">-</span></p><p class="mb-1"><strong>Año:</strong> <span id="vehicleYear">-</span></p><p class="mb-1"><strong>Kilometraje Actual:</strong> <span id="vehicleMileage">-</span></p></div></div><div class="col-lg-6"><div class="vehicle-info-card mb-3"><h6><i class="fas fa-file-alt me-2"></i>Documentación y Mantenimiento</h6><p class="mb-1"><strong>Vencimiento SOAT:</strong> <span id="vehicleSoat">-</span></p><p class="mb-1"><strong>Vencimiento Rev. Técnica:</strong> <span id="vehicleTechReview">-</span></p><p class="mb-1"><strong>Próximo Mantenimiento Sugerido:</strong> <span id="nextMaintenance" class="fw-bold text-primary">-</span></p></div></div></div><div class="card mt-2"><div class="card-header"><h6><i class="fas fa-history me-2"></i>Historial de Mantenimientos</h6></div><div class="card-body p-0"><div class="table-responsive"><table class="table table-sm table-striped mb-0" id="vehicleHistoryTable"><thead><tr><th>Fecha</th><th>Tipo</th><th>Kilometraje</th><th>Mecánico</th><th>Costo</th></tr></thead><tbody id="vehicleHistoryTableBody"><tr><td colspan="5" class="text-center p-3"><div class="loading-spinner mx-auto"></div> Cargando historial...</td></tr></tbody></table></div></div></div></div>
+                 <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="serviceOrderModal" tabindex="-1" aria-labelledby="serviceOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <form id="serviceOrderForm"><input type="hidden" id="editServiceOrderId">
+                    <div class="modal-header"><h5 class="modal-title" id="serviceOrderModalLabel">Nueva Orden de Servicio</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                    <div class="modal-body"><div class="row"><div class="col-md-6 mb-3"><label for="soClient" class="form-label">Cliente <span class="text-danger">*</span></label><select class="form-select" id="soClient" required onchange="updateVehicleInfoForServiceOrder(this.value)"></select></div><div class="col-md-6 mb-3"><label for="soVehicleInfo" class="form-label">Vehículo</label><input type="text" class="form-control" id="soVehicleInfo" readonly placeholder="Seleccione un cliente para ver vehículo"></div></div><div class="row"><div class="col-md-4 mb-3"><label for="soEntryDate" class="form-label">Fecha Ingreso <span class="text-danger">*</span></label><input type="date" class="form-control" id="soEntryDate" required></div><div class="col-md-4 mb-3"><label for="soMechanic" class="form-label">Mecánico Asignado</label><select class="form-select" id="soMechanic"></select></div><div class="col-md-4 mb-3"><label for="soStatus" class="form-label">Estado <span class="text-danger">*</span></label><select class="form-select" id="soStatus" required><option value="Pendiente" selected>Pendiente</option><option value="En Progreso">En Progreso</option><option value="Esperando Piezas">Esperando Piezas</option><option value="Listo para Entrega">Listo para Entrega</option><option value="Completado">Completado</option><option value="Facturado">Facturado</option><option value="Cancelado">Cancelado</option></select></div></div><div class="mb-3"><label for="soProblemDescription" class="form-label">Descripción del Problema (Reportado por Cliente)</label><textarea class="form-control" id="soProblemDescription" rows="2"></textarea></div><hr><h6>Servicios a Realizar y Piezas</h6><div id="serviceOrderItemsContainer"></div><button type="button" class="btn btn-sm btn-outline-secondary mt-2" onclick="addServiceOrderItem()"><i class="fas fa-plus"></i> Agregar Ítem</button><hr><div class="row justify-content-end"><div class="col-md-4"><label for="soTotalCost" class="form-label">Costo Total Estimado ($)</label><input type="number" class="form-control fw-bold fs-5" id="soTotalCost" readonly placeholder="0.00"></div></div><div class="mb-3 mt-3"><label for="soNotes" class="form-label">Notas Internas del Taller</label><textarea class="form-control" id="soNotes" rows="2"></textarea></div></div>
+                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary" id="saveServiceOrderBtn">Guardar Orden</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/babel">
+        const PredictiveAnalysis = () => {const [model, setModel] = React.useState(null);const [trained, setTrained] = React.useState(false);const [prediction, setPrediction] = React.useState(null);const [kmInput, setKmInput] = React.useState(100000);const [loading, setLoading] = React.useState(false);const [trainingProgress, setTrainingProgress] = React.useState(0);const [modelParams, setModelParams] = React.useState({epochs: 100,learningRate: 0.01,hiddenLayers: 2,neuronsPerLayer: 8});const [trainingStatus, setTrainingStatus] = React.useState('Listo para entrenar.');const prepareTrainingData = async () => {setTrainingStatus('Preparando datos...');const maintenanceData = [{ km: 10000, cost: 1500 },{ km: 20000, cost: 2500 },{ km: 30000, cost: 3500 },{ km: 40000, cost: 5000 },{ km: 50000, cost: 4500 },{ km: 60000, cost: 7500 },{ km: 70000, cost: 5500 },{ km: 80000, cost: 9000 },{ km: 90000, cost: 6500 },{ km: 100000, cost: 12000 },{ km: 15000, cost: 2000 },{ km: 25000, cost: 2800 },{ km: 35000, cost: 3800 },{ km: 45000, cost: 4800 },{ km: 55000, cost: 5800 },{ km: 65000, cost: 8000 },{ km: 75000, cost: 6000 },{ km: 85000, cost: 9500 },{ km: 95000, cost: 7000 },];const validData = maintenanceData.filter(d => typeof d.km === 'number' && typeof d.cost === 'number' && d.km > 0 && d.cost > 0);if (validData.length < 5) {setTrainingStatus('Error: No hay suficientes datos válidos (<5) para entrenar el modelo.');throw new Error('Insufficient valid data');}const kms = validData.map(d => d.km);const costs = validData.map(d => d.cost);const minKm = Math.min(...kms);const maxKm = Math.max(...kms);const minCost = Math.min(...costs);const maxCost = Math.max(...costs);const kmRange = maxKm - minKm;const costRange = maxCost - minCost;if (kmRange === 0 || costRange === 0) {setTrainingStatus('Error: Los datos de kilometraje o costo son constantes.');throw new Error('Data range is zero');}const normalizedData = validData.map(d => ({km: (d.km - minKm) / kmRange,cost: (d.cost - minCost) / costRange,}));const xs = tf.tensor2d(normalizedData.map(d => [d.km]));const ys = tf.tensor2d(normalizedData.map(d => [d.cost]));setTrainingStatus(`Datos listos (${validData.length} ejemplos).`);return {xs,ys,stats: { minKm, maxKm, minCost, maxCost, kmRange, costRange }};};const trainModel = async () => {setLoading(true);setTrained(false);setPrediction(null);setTrainingProgress(0);setTrainingStatus('Iniciando entrenamiento...');try {const { xs, ys, stats } = await prepareTrainingData();const model = tf.sequential();model.add(tf.layers.dense({ inputShape: [1], units: modelParams.neuronsPerLayer, activation: 'relu' }));for (let i = 0; i < modelParams.hiddenLayers; i++) {model.add(tf.layers.dense({ units: modelParams.neuronsPerLayer, activation: 'relu' }));}model.add(tf.layers.dense({ units: 1 }));model.compile({optimizer: tf.train.adam(modelParams.learningRate),loss: 'meanSquaredError'});setTrainingStatus('Entrenando modelo...');const history = await model.fit(xs, ys, {epochs: modelParams.epochs,batchSize: 4,validationSplit: 0.2,callbacks: {onEpochEnd: (epoch, logs) => {const progress = ((epoch + 1) / modelParams.epochs) * 100;setTrainingProgress(progress);setTrainingStatus(`Entrenando... Época ${epoch + 1}/${modelParams.epochs}, Pérdida: ${logs.loss.toFixed(4)}, Pérdida Val: ${logs.val_loss.toFixed(4)}`);}}});setModel({ model, stats });setTrained(true);setTrainingStatus(`Entrenamiento completado. Pérdida final: ${history.history.loss.pop().toFixed(4)}`);xs.dispose();ys.dispose();} catch (error) {console.error('Error durante el entrenamiento:', error);setTrainingStatus(`Error en entrenamiento: ${error.message}`);} finally {setLoading(false);}};const makePrediction = () => {if (!model || !trained) {alert("El modelo no está entrenado.");return;}if (isNaN(kmInput) || kmInput <= 0) {alert("Ingrese kilometraje válido.");return;}const { stats } = model;const normalizedKm = (kmInput - stats.minKm) / stats.kmRange;const predictionTensor = tf.tidy(() => {const inputTensor = tf.tensor2d([[normalizedKm]]);return model.model.predict(inputTensor);});const predictionValue = predictionTensor.dataSync()[0];predictionTensor.dispose();const denormalizedPrediction = predictionValue * stats.costRange + stats.minCost;setPrediction(Math.max(0, Math.round(denormalizedPrediction)));};return ( <div className="container-fluid"> <div className="row mb-3"> <div className="col-12"> <div className="card"> <div className="card-header">Configuración y Entrenamiento del Modelo</div> <div className="card-body"> <div className="row g-3"> <div className="col-md-6 col-lg-3"> <label className="form-label">Épocas: {modelParams.epochs}</label> <input type="range" className="form-range" min="10" max="500" step="10" value={modelParams.epochs} onChange={e => setModelParams({...modelParams, epochs: parseInt(e.target.value)})} disabled={loading} /> </div> <div className="col-md-6 col-lg-3"> <label className="form-label">Tasa Aprendizaje: {modelParams.learningRate}</label> <input type="range" className="form-range" min="0.001" max="0.1" step="0.001" value={modelParams.learningRate} onChange={e => setModelParams({...modelParams, learningRate: parseFloat(e.target.value)})} disabled={loading} /> </div> <div className="col-md-6 col-lg-3"> <label className="form-label">Capas Ocultas: {modelParams.hiddenLayers}</label> <input type="range" className="form-range" min="1" max="5" step="1" value={modelParams.hiddenLayers} onChange={e => setModelParams({...modelParams, hiddenLayers: parseInt(e.target.value)})} disabled={loading} /> </div> <div className="col-md-6 col-lg-3"> <label className="form-label">Neuronas/Capa: {modelParams.neuronsPerLayer}</label> <input type="range" className="form-range" min="4" max="32" step="4" value={modelParams.neuronsPerLayer} onChange={e => setModelParams({...modelParams, neuronsPerLayer: parseInt(e.target.value)})} disabled={loading} /> </div> </div> <button className="btn btn-primary w-100 mt-3" onClick={trainModel} disabled={loading}> {loading ? <><span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Entrenando...</> : <><i className="fas fa-play me-1"></i>Entrenar Modelo</>} </button> {(loading || trained || trainingStatus.startsWith('Error')) && ( <div className="mt-3"> <div className="progress" style={{height: '10px'}}> <div className={`progress-bar ${loading ? 'progress-bar-striped progress-bar-animated' : trained ? 'bg-success' : 'bg-danger'}`} role="progressbar" style={{width: `${loading ? trainingProgress : 100}%`}} aria-valuenow={loading ? trainingProgress : 100} aria-valuemin="0" aria-valuemax="100"></div> </div> <small className="text-muted">{trainingStatus}</small> </div> )} </div> </div> </div> </div> <div className="row"> <div className="col-12"> <div className="card"> <div className="card-header">Predicción de Costos de Mantenimiento</div> <div className="card-body"> <div className="row g-3 align-items-center"> <div className="col-md-6"> <label htmlFor="kmInputPredict" className="form-label">Ingrese Kilometraje:</label> <input type="number" className="form-control" id="kmInputPredict" value={kmInput} onChange={e => setKmInput(parseInt(e.target.value))} min="1000" step="1000" disabled={!trained} /> </div> <div className="col-md-6 mt-md-auto"> <button className="btn btn-success w-100" onClick={makePrediction} disabled={!trained || loading}> <i className="fas fa-calculator me-1"></i> Predecir Costo </button> </div> </div> {prediction !== null && ( <div className="alert alert-info mt-3 mb-0"> <h5 className="alert-heading">Predicción:</h5> <p className="mb-0">Costo estimado a los <strong>{kmInput.toLocaleString()} km</strong>: <strong className="ms-2 fs-4">$ {prediction.toLocaleString()}</strong></p> <small className="text-muted">(Basado en modelo entrenado)</small> </div> )} {!trained && !loading && ( <div className="alert alert-warning mt-3 mb-0"> <i className="fas fa-exclamation-triangle me-2"></i> El modelo necesita ser entrenado. </div> )} </div> </div> </div> </div> </div> );};
+        const WorkshopComparison = () => {const [workshopData, setWorkshopData] = React.useState([]); const [loading, setLoading] = React.useState(true);const [filters, setFilters] = React.useState({ brand: 'all', region: 'all', type: 'all' });const chartRef = React.useRef(null);const loadWorkshopData = () => {setLoading(true);fetch('/api/workshops').then(res => res.ok ? res.json() : Promise.reject(res.statusText)).then(data => {setWorkshopData(data);setLoading(false);}).catch(err => {console.error("API error:", err);setWorkshopData([]);setLoading(false);});socket.on('workshop_data', (data) => {setWorkshopData(data);setLoading(false);});};React.useEffect(() => {loadWorkshopData();return () => socket.off('workshop_data');}, []);const filteredWorkshops = React.useMemo(() => workshopData.filter(ws => (filters.brand === 'all' || ws.brand === filters.brand) && (filters.region === 'all' || ws.region === filters.region) && (filters.type === 'all' || ws.type === filters.type)), [workshopData, filters]);React.useEffect(() => {if (loading || filteredWorkshops.length === 0) {if (chartRef.current) {chartRef.current.destroy();chartRef.current = null;}return;}const ctx = document.getElementById('workshopRadarChart');if (!ctx) return;if (chartRef.current) chartRef.current.destroy();const chartData = {labels: ['Valoración (0-100)', 'Precio Inverso (0-100)', 'Espera Inversa (0-100)', 'Disp. Rep. (0-100)'],datasets: filteredWorkshops.slice(0, 5).map(ws => ({label: ws.name,data: [(ws.rating || 0) * 20, ws.priceIndex ? (100 - ws.priceIndex) : 0, ws.waitTime ? Math.max(0, 100 - (ws.waitTime * 20)) : 0, (ws.partAvailability || 0) * 100],fill: true,backgroundColor: getRandomColor(0.2),borderColor: getRandomColor(1),pointBackgroundColor: getRandomColor(1),pointBorderColor: '#fff',pointHoverBackgroundColor: '#fff',pointHoverBorderColor: getRandomColor(1)}))};chartRef.current = new Chart(ctx, {type: 'radar',data: chartData,options: {responsive: true,maintainAspectRatio: false,elements: { line: { borderWidth: 2 } },scales: {r: {angleLines: { display: true },suggestedMin: 0,suggestedMax: 100,pointLabels: { font: { size: 10 } }}},plugins: {legend: { display: true, position: 'top' },tooltip: {callbacks: {label: function(context) {let label = context.dataset.label || '';if (label) label += ': ';let originalValue = "";switch(context.label) {case 'Valoración (0-100)': originalValue = `(${(context.raw / 20).toFixed(1)}/5)`; break;case 'Precio Inverso (0-100)': originalValue = `(Índice: ${100 - context.raw})`; break;case 'Espera Inversa (0-100)': originalValue = `(${( (100 - context.raw) / 20).toFixed(1)}h)`; break;case 'Disp. Rep. (0-100)': originalValue = `(${(context.raw / 100).toFixed(2)})`; break;}return `${label} ${context.formattedValue} ${originalValue}`;}}}}}});}, [loading, filteredWorkshops]);const getRandomColor = (opacity) => `rgba(${Math.floor(Math.random()*200)}, ${Math.floor(Math.random()*200)}, ${Math.floor(Math.random()*200)}, ${opacity})`;const handleFilterChange = (e) => setFilters(prev => ({ ...prev, [e.target.name]: e.target.value }));return ( <div className="container-fluid"> <div className="card mb-4"> <div className="card-header">Filtros de Comparación</div> <div className="card-body"> <div className="row g-3"> <div className="col-md-4"> <label htmlFor="filterBrand" className="form-label">Marca:</label> <select id="filterBrand" name="brand" className="form-select" value={filters.brand} onChange={handleFilterChange} > <option value="all">Todas</option> <option value="Volkswagen">Volkswagen</option> <option value="Toyota">Toyota</option> <option value="Nissan">Nissan</option> <option value="Chevrolet">Chevrolet</option> <option value="Honda">Honda</option> <option value="Multimarca">Multimarca</option> </select> </div> <div className="col-md-4"> <label htmlFor="filterRegion" className="form-label">Región:</label> <select id="filterRegion" name="region" className="form-select" value={filters.region} onChange={handleFilterChange} > <option value="all">Todas</option> <option value="Norte">Norte</option> <option value="Centro">Centro</option> <option value="Sur">Sur</option> </select> </div> <div className="col-md-4"> <label htmlFor="filterType" className="form-label">Tipo Taller:</label> <select id="filterType" name="type" className="form-select" value={filters.type} onChange={handleFilterChange} > <option value="all">Todos</option> <option value="oficial">Oficial</option> <option value="independiente">Independiente</option> </select> </div> </div> </div> </div> <div className="row"> {loading ? ( <div className="col-12 text-center p-5"> <div className="loading-spinner mx-auto mb-2"></div> Cargando... </div> ) : filteredWorkshops.length === 0 ? ( <div className="col-12"> <div className="alert alert-warning text-center"> No hay talleres con esos filtros. </div> </div> ) : ( <> <div className="col-lg-8 mb-4"> <div className="card h-100"> <div className="card-header">Gráfico Comparativo Radar (Top 5)</div> <div className="card-body"> <div className="chart-container" style={{height: '400px'}}> <canvas id="workshopRadarChart"></canvas> </div> </div> </div> </div> <div className="col-lg-4 mb-4"> <div className="card h-100"> <div className="card-header">Lista de Talleres ({filteredWorkshops.length})</div> <div className="card-body overflow-auto" style={{maxHeight: '450px'}}> {filteredWorkshops.length > 5 && <p className="text-muted small mb-2">Top 5 en gráfico.</p>} <ul className="list-group list-group-flush"> {filteredWorkshops.sort((a,b) => (b.rating || 0) - (a.rating || 0)).map(ws => ( <li key={ws.id} className="list-group-item d-flex justify-content-between align-items-center p-2"> <div> <h6 className="mb-0 small">{ws.name}</h6> <small className="text-muted d-block" style={{fontSize: '0.75rem'}}>{ws.brand} - {ws.region} ({ws.type})</small> </div> <span className={`badge bg-${(ws.rating || 0) >= 4.5 ? 'success' : (ws.rating || 0) >= 4.0 ? 'primary' : 'warning'} rounded-pill`}> <i className="fas fa-star me-1"></i>{ws.rating || 'N/A'} </span> </li> ))} </ul> </div> </div> </div> </> )} </div> </div> );};
+        function renderReactComponents() {const predictiveRoot = document.getElementById('predictiveAnalysisReactRoot');if (predictiveRoot && typeof PredictiveAnalysis !== 'undefined') ReactDOM.render(React.createElement(PredictiveAnalysis), predictiveRoot);else if (predictiveRoot) predictiveRoot.innerHTML = '<div class="alert alert-danger">Error al cargar componente predictivo.</div>';const workshopRoot = document.getElementById('workshopComparisonReactRoot');if (workshopRoot && typeof WorkshopComparison !== 'undefined') ReactDOM.render(React.createElement(WorkshopComparison), workshopRoot);else if (workshopRoot) workshopRoot.innerHTML = '<div class="alert alert-danger">Error al cargar componente de comparación.</div>';}
+         document.addEventListener('DOMContentLoaded', renderReactComponents);
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

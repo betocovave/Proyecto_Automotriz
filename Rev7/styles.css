@@ -1,0 +1,507 @@
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Estilos del sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    transition: all 0.3s;
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    margin: 0.2rem 0;
+    border-radius: 0.25rem;
+    transition: all 0.3s;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.sidebar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    position: relative;
+}
+
+.sidebar .nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background-color: #fff;
+    border-radius: 0 3px 3px 0;
+}
+
+/* Estilos de las tarjetas */
+.card {
+    border: none;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    padding: 1rem;
+    font-weight: 600;
+}
+
+/* Estilos de las tablas */
+.table {
+    background-color: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table-responsive {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* Estilos del modo oscuro */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-mode .card {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .card-header {
+    background-color: #2c2c2c;
+    border-bottom: 1px solid #333;
+}
+
+body.dark-mode .table {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .table thead th {
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    border-bottom: 2px solid #333;
+}
+
+body.dark-mode .table td {
+    border-color: #333;
+}
+
+body.dark-mode .table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .modal-content {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #2c2c2c;
+    border-color: #333;
+    color: #e0e0e0;
+}
+
+body.dark-mode .list-group-item {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    border-color: #333;
+}
+
+body.dark-mode .text-muted {
+    color: #aaa !important;
+}
+
+/* Estilos de los botones */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
+}
+
+.btn-success {
+    transition: all 0.2s;
+}
+
+.btn-success:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(25, 135, 84, 0.2);
+}
+
+.btn-danger {
+    transition: all 0.2s;
+}
+
+.btn-danger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(220, 53, 69, 0.2);
+}
+
+.btn-action {
+    margin-right: 0.25rem;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    line-height: 32px;
+    text-align: center;
+}
+
+/* Estilos de los formularios */
+.form-control:focus,
+.form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-range::-webkit-slider-thumb {
+    background-color: #0d6efd;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tab-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Estilos para algoritmo predictivo */
+.prediction-card {
+    background-color: #e9f7fe;
+    border-left: 4px solid #0d6efd;
+    transition: all 0.3s;
+}
+
+.prediction-card:hover {
+    background-color: #d2edfe;
+}
+
+body.dark-mode .prediction-card {
+    background-color: #1e2f3e;
+    border-left: 4px solid #0d6efd;
+}
+
+body.dark-mode .prediction-card:hover {
+    background-color: #253546;
+}
+
+/* Estilos para gráficos */
+.plot-container {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    background-color: #fff;
+    transition: all 0.3s;
+}
+
+body.dark-mode .plot-container {
+    background-color: #1e1e1e;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para el calendario */
+.calendar-container {
+    margin-top: 2rem;
+    overflow-x: auto;
+}
+
+#appointmentCalendar {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#appointmentCalendar th,
+#appointmentCalendar td {
+    border: 1px solid #dee2e6;
+    padding: 0.5rem;
+    min-width: 120px;
+    height: 60px;
+    vertical-align: top;
+}
+
+#appointmentCalendar th {
+    background-color: #f8f9fa;
+    text-align: center;
+    font-weight: bold;
+}
+
+body.dark-mode #appointmentCalendar th,
+body.dark-mode #appointmentCalendar td {
+    border-color: #333;
+}
+
+body.dark-mode #appointmentCalendar th {
+    background-color: #2c2c2c;
+}
+
+.appointment-card {
+    background-color: #e3f2fd;
+    border-radius: 4px;
+    padding: 0.25rem;
+    margin-bottom: 0.25rem;
+    font-size: 0.8rem;
+    border-left: 3px solid #1976d2;
+    transition: all 0.2s;
+}
+
+.appointment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-card.pendiente {
+    background-color: #fff3e0;
+    border-left-color: #f57c00;
+}
+
+.appointment-card.completada {
+    background-color: #e8f5e9;
+    border-left-color: #43a047;
+}
+
+.appointment-card.cancelada {
+    background-color: #ffebee;
+    border-left-color: #e53935;
+}
+
+body.dark-mode .appointment-card {
+    background-color: #263238;
+    border-left: 3px solid #1976d2;
+}
+
+body.dark-mode .appointment-card.pendiente {
+    background-color: #3e2723;
+    border-left-color: #f57c00;
+}
+
+body.dark-mode .appointment-card.completada {
+    background-color: #1b5e20;
+    border-left-color: #43a047;
+}
+
+body.dark-mode .appointment-card.cancelada {
+    background-color: #b71c1c;
+    border-left-color: #e53935;
+}
+
+/* Estilos para el inventario */
+.stock-alert {
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .sidebar {
+        position: static;
+        height: auto;
+        padding-top: 0;
+    }
+    
+    main {
+        margin-left: 0 !important;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Estilos para los componentes de React */
+.react-component {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+    transition: all 0.3s;
+}
+
+.progress {
+    height: 0.5rem;
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+.progress-bar-striped {
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+    background-size: 1rem 1rem;
+}
+
+/* Tooltip personalizado */
+.custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.custom-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Animación de carga */
+.loading-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border-left-color: #0d6efd;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Estilos para reportes */
+#reportContent {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+}
+
+#reportContent table {
+    margin-top: 1rem;
+}
+
+#reportContent h4 {
+    color: #0d6efd;
+    margin-bottom: 1rem;
+}
+
+/* Estilos para la gestión de vehículos */
+#vehicleDetails {
+    margin-top: 1rem;
+}
+
+#vehicleHistoryTable th {
+    background-color: #f8f9fa;
+}
+
+.vehicle-info-card {
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.vehicle-info-card h6 {
+    color: #0d6efd;
+    margin-bottom: 0.5rem;
+}
+
+/* Estilos para modales */
+.modal-content {
+    border-radius: 0.5rem;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Estilos para alertas de stock bajo */
+.stock-alert {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/* Estilos para gráficos de reportes */
+.report-chart {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+} 
