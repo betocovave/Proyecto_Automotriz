@@ -318,7 +318,7 @@ function createDefaultMechanic() {
             addReq.onsuccess = () => console.log('Mecánico default creado');
             addReq.onerror = er => console.error("Error default mech:", er.target.error);
         } else {
-            console.log("Default mech existe.");
+            // console.log("Default mech existe."); // Comentado para reducir ruido en consola
         }
     };
     req.onerror = e_event => console.error("Error check default mech:", e_event.target.error);
@@ -791,6 +791,17 @@ async function getClientDataForExport(clientId) {
     return { client, history };
 }
 
+async function imageToDataUrl(url) {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
 async function exportClientToPdf() {
     const modalElement = document.getElementById('clientDetailsModal');
     const clientId = parseInt(modalElement.dataset.clientId);
@@ -802,158 +813,71 @@ async function exportClientToPdf() {
 
     try {
         const { client, history } = await getClientDataForExport(clientId);
-        const { jsPDF } = window.jspdf;
+        const { jsPDF } = window.jspdf; 
         const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
         const margin = 15;
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
-        const logoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/100px-Volkswagen_logo_2019.svg.png'; // URL del logo
-        const logoWidth = 20; // Ancho del logo en mm
-        const logoHeight = 20; // Alto del logo en mm (ajustar si es necesario)
+        const logoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/100px-Volkswagen_logo_2019.svg.png';
+        const logoWidth = 15; 
+        const logoHeight = 15; 
 
-        // --- Añadir Logo (Intentar con manejo de CORS si es de otra URL) ---
         try {
-            // Convertir la imagen a Data URL para evitar problemas de CORS en jsPDF
             const imgDataUrl = await imageToDataUrl(logoUrl);
-            doc.addImage(imgDataUrl, 'PNG', pageWidth - margin - logoWidth, margin - 5, logoWidth, logoHeight);
+            doc.addImage(imgDataUrl, 'PNG', pageWidth - margin - logoWidth, margin - 10, logoWidth, logoHeight);
         } catch (imgError) {
             console.warn("No se pudo cargar o añadir el logo al PDF:", imgError);
-            // Opcional: Dibujar un placeholder si falla
-            doc.setFontSize(8);
-            doc.setTextColor(150);
-            doc.text("[Logo VW]", pageWidth - margin - 15, margin + 5);
-            doc.setTextColor(0);
+            doc.setFontSize(8); doc.setTextColor(150); doc.text("[Logo VW]", pageWidth - margin - 15, margin + 5); doc.setTextColor(0);
         }
 
-        // --- Título ---
-        doc.setFontSize(18);
-        doc.setTextColor(0);
-        doc.text(`Reporte Cliente: ${client.nombre || 'N/A'}`, margin, margin + 10);
-
-        // --- Línea divisoria ---
-        doc.setLineWidth(0.2);
-        doc.line(margin, margin + 15, pageWidth - margin, margin + 15);
+        doc.setFontSize(18); doc.setTextColor(0); doc.text(`Reporte Cliente: ${client.nombre || 'N/A'}`, margin, margin + 10);
+        doc.setLineWidth(0.2); doc.line(margin, margin + 15, pageWidth - margin, margin + 15);
 
         let yPos = margin + 25;
-        const lineHeight = 6; // Reducir un poco el interlineado
+        const lineHeight = 6; 
         const sectionSpacing = 8;
         const indent = 5;
 
-        // --- Información del Cliente ---
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'bold');
-        doc.text("Información del Cliente", margin, yPos);
-        yPos += lineHeight * 1.5;
-        doc.setFontSize(10);
-        doc.setFont(undefined, 'normal');
-        doc.setTextColor(80);
+        doc.setFontSize(12); doc.setFont(undefined, 'bold'); doc.text("Información del Cliente", margin, yPos);
+        yPos += lineHeight * 1.5; doc.setFontSize(10); doc.setFont(undefined, 'normal'); doc.setTextColor(80);
         doc.text(`ID:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.id}`, margin + indent + 20, yPos); yPos += lineHeight;
-        doc.setTextColor(80);
-        doc.text(`Nombre:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.nombre || 'N/A'}`, margin + indent + 20, yPos); yPos += lineHeight;
-        doc.setTextColor(80);
-        doc.text(`Correo:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.correo || 'N/A'}`, margin + indent + 20, yPos);
+        doc.setTextColor(80); doc.text(`Nombre:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.nombre || 'N/A'}`, margin + indent + 20, yPos); yPos += lineHeight;
+        doc.setTextColor(80); doc.text(`Correo:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.correo || 'N/A'}`, margin + indent + 20, yPos);
         yPos += sectionSpacing;
 
-
-        // --- Información del Vehículo ---
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'bold');
-        doc.text("Información del Vehículo", margin, yPos);
-        yPos += lineHeight * 1.5;
-        doc.setFontSize(10);
-        doc.setFont(undefined, 'normal');
-        doc.setTextColor(80);
+        doc.setFontSize(12); doc.setFont(undefined, 'bold'); doc.text("Información del Vehículo", margin, yPos);
+        yPos += lineHeight * 1.5; doc.setFontSize(10); doc.setFont(undefined, 'normal'); doc.setTextColor(80);
         doc.text(`Placa:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.placa || 'N/A'}`, margin + indent + 25, yPos); yPos += lineHeight;
-        doc.setTextColor(80);
-        doc.text(`Marca:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.marca_carro || 'N/A'}`, margin + indent + 25, yPos); yPos += lineHeight;
-        doc.setTextColor(80);
-        doc.text(`Modelo:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.modelo_carro || 'N/A'}`, margin + indent + 25, yPos); yPos += lineHeight;
-        doc.setTextColor(80);
-        doc.text(`Año:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.anio_carro || 'N/A'}`, margin + indent + 25, yPos); yPos += lineHeight;
-        doc.setTextColor(80);
-        doc.text(`Kilometraje:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.kilometraje ? client.kilometraje.toLocaleString() + ' km' : 'N/A'}`, margin + indent + 25, yPos); yPos += lineHeight;
-        doc.setTextColor(80);
-        doc.text(`Motivo Visita:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.revision || 'N/A'}`, margin + indent + 25, yPos); yPos += lineHeight;
-        doc.setTextColor(80);
-        doc.text(`SOAT Vence:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.soat ? new Date(client.soat).toLocaleDateString() : 'No reg.'}`, margin + indent + 25, yPos); yPos += lineHeight;
-        doc.setTextColor(80);
-        doc.text(`Rev. Técnica Vence:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.revision_tecnica ? new Date(client.revision_tecnica).toLocaleDateString() : 'No reg.'}`, margin + indent + 25, yPos);
+        doc.setTextColor(80); doc.text(`Marca:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.marca_carro || 'N/A'}`, margin + indent + 25, yPos); yPos += lineHeight;
+        doc.setTextColor(80); doc.text(`Modelo:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.modelo_carro || 'N/A'}`, margin + indent + 25, yPos); yPos += lineHeight;
+        doc.setTextColor(80); doc.text(`Año:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.anio_carro || 'N/A'}`, margin + indent + 25, yPos); yPos += lineHeight;
+        doc.setTextColor(80); doc.text(`Kilometraje:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.kilometraje ? client.kilometraje.toLocaleString() + ' km' : 'N/A'}`, margin + indent + 25, yPos); yPos += lineHeight;
+        doc.setTextColor(80); doc.text(`Motivo Visita:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.revision || 'N/A'}`, margin + indent + 25, yPos); yPos += lineHeight;
+        doc.setTextColor(80); doc.text(`SOAT Vence:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.soat ? new Date(client.soat).toLocaleDateString() : 'No reg.'}`, margin + indent + 25, yPos); yPos += lineHeight;
+        doc.setTextColor(80); doc.text(`Rev. Técnica Vence:`, margin, yPos); doc.setTextColor(0); doc.text(`${client.revision_tecnica ? new Date(client.revision_tecnica).toLocaleDateString() : 'No reg.'}`, margin + indent + 25, yPos);
         yPos += sectionSpacing * 1.5;
 
-
-        // --- Historial de Mantenimientos ---
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'bold');
-        doc.text("Historial de Mantenimientos", margin, yPos);
+        doc.setFontSize(12); doc.setFont(undefined, 'bold'); doc.text("Historial de Mantenimientos", margin, yPos);
         yPos += lineHeight;
 
         if (history.length > 0) {
             const tableColumn = ["Fecha", "Tipo", "Kilometraje", "Costo ($)", "Estado", "Mecánico"];
-            const tableRows = history.map(visit => [
-                new Date(visit.fecha).toLocaleDateString(),
-                visit.tipo || 'N/A',
-                visit.kilometraje ? visit.kilometraje.toLocaleString() + ' km' : 'N/A',
-                visit.costo ? visit.costo.toFixed(2) : 'N/A',
-                visit.estado || 'Completado',
-                visit.mecanicoUsuario || 'N/A'
-            ]);
+            const tableRows = history.map(visit => [ new Date(visit.fecha).toLocaleDateString(), visit.tipo || 'N/A', visit.kilometraje ? visit.kilometraje.toLocaleString() + ' km' : 'N/A', visit.costo ? visit.costo.toFixed(2) : 'N/A', visit.estado || 'Completado', visit.mecanicoUsuario || 'N/A' ]);
+            doc.autoTable({ head: [tableColumn], body: tableRows, startY: yPos, theme: 'grid', headStyles: { fillColor: [0, 100, 200], textColor: 255, fontStyle: 'bold' }, styles: { fontSize: 9, cellPadding: 2, valign: 'middle' }, columnStyles: { 0: { cellWidth: 20 }, 1: { cellWidth: 35 }, 2: { cellWidth: 25, halign: 'right' }, 3: { cellWidth: 20, halign: 'right' }, 4: { cellWidth: 25 }, 5: { cellWidth: 'auto'}  }, margin: { left: margin, right: margin } });
+        } else { doc.setFontSize(10); doc.setFont(undefined, 'italic'); doc.setTextColor(150); doc.text("No hay historial de mantenimientos registrado.", margin, yPos + lineHeight); }
 
-            doc.autoTable({
-                head: [tableColumn],
-                body: tableRows,
-                startY: yPos,
-                theme: 'grid', // 'striped', 'grid', 'plain'
-                headStyles: { fillColor: [0, 100, 200], textColor: 255, fontStyle: 'bold' }, // Azul VW
-                styles: { fontSize: 9, cellPadding: 2, valign: 'middle' },
-                columnStyles: {
-                    0: { cellWidth: 20 }, // Fecha
-                    1: { cellWidth: 35 }, // Tipo
-                    2: { cellWidth: 25, halign: 'right' }, // Km
-                    3: { cellWidth: 20, halign: 'right' }, // Costo
-                    4: { cellWidth: 25 }, // Estado
-                    5: { cellWidth: 'auto'}  // Mecanico
-                 },
-                margin: { left: margin, right: margin }
-            });
-        } else {
-            doc.setFontSize(10);
-            doc.setFont(undefined, 'italic');
-            doc.setTextColor(150);
-            doc.text("No hay historial de mantenimientos registrado.", margin, yPos + lineHeight);
-        }
-
-        // --- Pie de página (se añade después para que esté en todas las páginas) ---
         const pageCount = doc.internal.getNumberOfPages();
-         doc.setFontSize(8);
-         doc.setTextColor(150);
-        for (let i = 1; i <= pageCount; i++) {
-            doc.setPage(i);
-            doc.text(`Página ${i} de ${pageCount} | Volkswagen Taller Pro`, margin, pageHeight - 10);
-            doc.text(new Date().toLocaleDateString(), pageWidth - margin, pageHeight - 10, {align: 'right'});
-        }
-
+         doc.setFontSize(8); doc.setTextColor(150);
+        for (let i = 1; i <= pageCount; i++) { doc.setPage(i); doc.text(`Página ${i} de ${pageCount} | Volkswagen Taller Pro`, margin, pageHeight - 10); doc.text(new Date().toLocaleDateString(), pageWidth - margin, pageHeight - 10, {align: 'right'}); }
 
         const fileName = `Reporte_Cliente_${client.nombre ? client.nombre.replace(/\s+/g, '_') : client.id}.pdf`;
         doc.save(fileName);
-        // alert(`PDF "${fileName}" generado.`); // Opcional: quitar alerta si es molesto
 
     } catch (error) {
         console.error("Error al exportar cliente a PDF:", error);
         alert("Error al generar el PDF del cliente: " + error.message);
     }
-}
-
-// Helper para convertir imagen a Data URL (manejo básico de CORS)
-async function imageToDataUrl(url) {
-  const response = await fetch(url);
-  const blob = await response.blob();
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
 }
 
 async function exportClientToCsv() {
@@ -982,7 +906,7 @@ async function exportClientToCsv() {
 async function exportGeneralReportToPdf(reportData, fileName, includeGraphics) {
     if (!reportData) { alert("No hay datos para generar el PDF."); return; }
     const { jsPDF } = window.jspdf; const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-    let yPos = 20; const margin = 15; const pageWidth = doc.internal.pageSize.getWidth(); const lineHeight = 7; const sectionSpacing = 10;
+    let yPos = 20; const margin = 15; const pageWidth = doc.internal.pageSize.getWidth(); const pageHeight = doc.internal.pageSize.getHeight(); const lineHeight = 7; const sectionSpacing = 10;
     doc.setFontSize(18); doc.text("Reporte General de Mantenimientos", pageWidth / 2, yPos, { align: 'center' }); yPos += sectionSpacing;
     if (reportData.summary) {
         doc.setFontSize(14); doc.text("Resumen del Reporte", margin, yPos); yPos += lineHeight; doc.setFontSize(10); doc.setTextColor(80);
@@ -1074,6 +998,157 @@ function exportToJson(data, fileName) {
     document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(link.href);
 }
 
+
+// ****** DEFINICIÓN DE exportServiceOrderToPdf ANTES DE SER LLAMADA ******
+async function exportServiceOrderToPdf(orderData) {
+    if (!orderData || !orderData.clienteId) {
+        alert("Datos incompletos para generar PDF de la orden.");
+        return;
+    }
+
+    try {
+        const { client } = await getClientDataForExport(orderData.clienteId); 
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
+        const margin = 15;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const logoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/100px-Volkswagen_logo_2019.svg.png';
+        const logoWidth = 15; 
+        const logoHeight = 15; 
+
+        try {
+            const imgDataUrl = await imageToDataUrl(logoUrl);
+            doc.addImage(imgDataUrl, 'PNG', pageWidth - margin - logoWidth, margin - 10, logoWidth, logoHeight);
+        } catch (imgError) { console.warn("No se pudo cargar el logo para la orden:", imgError); }
+
+        doc.setFontSize(18);
+        doc.setTextColor(0);
+        doc.text(`Orden de Servicio N°: ${orderData.id}`, margin, margin + 10);
+        doc.setLineWidth(0.2);
+        doc.line(margin, margin + 15, pageWidth - margin, margin + 15);
+
+        let yPos = margin + 25;
+        const lineHeight = 6;
+        const sectionSpacing = 8;
+        
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'bold');
+        doc.text("Cliente:", margin, yPos);
+        doc.setFont(undefined, 'normal');
+        doc.text(`${client.nombre || 'N/A'} (ID: ${client.id})`, margin + 25, yPos);
+        yPos += lineHeight;
+        doc.setFont(undefined, 'bold');
+        doc.text("Vehículo:", margin, yPos);
+        doc.setFont(undefined, 'normal');
+        doc.text(`${orderData.vehicleInfo || client.placa || 'N/A'}`, margin + 25, yPos);
+        yPos += sectionSpacing;
+
+        doc.setFont(undefined, 'bold');
+        doc.text("Fecha Ingreso:", margin, yPos);
+        doc.setFont(undefined, 'normal');
+        doc.text(new Date(orderData.entryDate).toLocaleDateString(), margin + 35, yPos);
+        
+        doc.setFont(undefined, 'bold');
+        doc.text("Mecánico:", margin + (pageWidth / 2) - 20, yPos);
+        doc.setFont(undefined, 'normal');
+        doc.text(orderData.mechanicName || 'No asignado', margin + (pageWidth / 2) + 5, yPos);
+        yPos += lineHeight;
+        
+        doc.setFont(undefined, 'bold');
+        doc.text("Estado:", margin, yPos);
+        doc.setFont(undefined, 'normal');
+        doc.text(orderData.status, margin + 35, yPos);
+        yPos += sectionSpacing;
+
+        doc.setFont(undefined, 'bold');
+        doc.text("Problema Reportado:", margin, yPos);
+        yPos += lineHeight;
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(80);
+        doc.text(orderData.problemDescription || "No especificado.", margin, yPos, { maxWidth: pageWidth - 2 * margin });
+        yPos += doc.getTextDimensions(orderData.problemDescription || "No especificado.", { maxWidth: pageWidth - 2 * margin }).h + sectionSpacing / 2;
+        doc.setTextColor(0);
+
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text("Detalle de Servicios y Piezas", margin, yPos);
+        yPos += lineHeight;
+
+        if (orderData.items && orderData.items.length > 0) {
+            const tableColumn = ["Descripción", "Cant.", "Precio U. ($)", "Subtotal ($)"];
+            const tableRows = orderData.items.map(item => [
+                item.description,
+                item.quantity.toFixed(1),
+                item.price.toFixed(2),
+                item.total.toFixed(2)
+            ]);
+
+            doc.autoTable({
+                head: [tableColumn],
+                body: tableRows,
+                startY: yPos,
+                theme: 'grid',
+                headStyles: { fillColor: [0, 100, 200], textColor: 255, fontStyle: 'bold' },
+                styles: { fontSize: 9, cellPadding: 2, valign: 'middle' },
+                columnStyles: {
+                    0: { cellWidth: (pageWidth - 2 * margin) * 0.5 }, 
+                    1: { cellWidth: (pageWidth - 2 * margin) * 0.1, halign: 'right' }, 
+                    2: { cellWidth: (pageWidth - 2 * margin) * 0.2, halign: 'right' }, 
+                    3: { cellWidth: (pageWidth - 2 * margin) * 0.2, halign: 'right' }  
+                },
+                margin: { left: margin, right: margin },
+                didDrawPage: function (data) { yPos = data.cursor.y + sectionSpacing / 2; }
+            });
+            yPos = doc.autoTable.previous.finalY + sectionSpacing; 
+        } else {
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'italic');
+            doc.setTextColor(150);
+            doc.text("No se detallaron ítems en esta orden.", margin, yPos + lineHeight);
+            yPos += lineHeight * 2;
+        }
+
+        if (yPos > pageHeight - margin - lineHeight * 2) { 
+            doc.addPage();
+            yPos = margin;
+        }
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text("TOTAL: $" + (orderData.totalCost || 0).toFixed(2), pageWidth - margin, yPos, { align: 'right' });
+        yPos += sectionSpacing;
+
+        if (orderData.notes) {
+            if (yPos > pageHeight - margin - lineHeight * 3) { doc.addPage(); yPos = margin; }
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'bold');
+            doc.text("Notas Adicionales del Taller:", margin, yPos);
+            yPos += lineHeight;
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(80);
+            doc.text(orderData.notes, margin, yPos, { maxWidth: pageWidth - 2 * margin });
+            doc.setTextColor(0);
+        }
+
+        const pageCount = doc.internal.getNumberOfPages();
+        doc.setFontSize(8);
+        doc.setTextColor(150);
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.text(`Página ${i} de ${pageCount} | Volkswagen Taller Pro`, margin, pageHeight - 10);
+            doc.text(new Date().toLocaleDateString(), pageWidth - margin, pageHeight - 10, {align: 'right'});
+        }
+
+        const fileName = `Orden_Servicio_${orderData.id}_Cliente_${client.nombre ? client.nombre.replace(/\s+/g, '_') : client.id}.pdf`;
+        doc.save(fileName);
+
+    } catch (error) {
+        console.error("Error al exportar orden a PDF:", error);
+        alert("Error al generar el PDF de la orden: " + error.message);
+    }
+}
+
 // Órdenes de Servicio
 function getServiceOrders() {
     return new Promise((resolve, reject) => {
@@ -1124,7 +1199,7 @@ function updateServiceOrder(orderData) {
                     tipo: 'Servicio Taller',
                 }).catch(err => console.error("Error al agregar a historial desde orden (update):", err));
             }
-            resolve(request.result);
+            resolve(orderData);
         };
         request.onerror = (e) => reject('Error actualizando orden: ' + e.target.error.message);
     });
@@ -1194,42 +1269,52 @@ function getStatusBadge(status) {
     }
 }
 
-function prepareServiceOrderModal(orderId = null) {
+async function prepareServiceOrderModal(orderId = null) {
     const modalEl = document.getElementById('serviceOrderModal');
     const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
     const form = document.getElementById('serviceOrderForm');
     form.reset();
     document.getElementById('editServiceOrderId').value = '';
     document.getElementById('serviceOrderModalLabel').textContent = "Nueva Orden de Servicio";
-    document.getElementById('serviceOrderItemsContainer').innerHTML = '';
-    addServiceOrderItem(); // Add one initial blank item
-
+    document.getElementById('serviceOrderItemsContainer').innerHTML = ''; 
+    
     const clientSelect = document.getElementById('soClient');
     clientSelect.innerHTML = '<option value="">Cargando clientes...</option>';
-    getClients().then(clients => {
+    const mechanicSelect = document.getElementById('soMechanic');
+    mechanicSelect.innerHTML = '<option value="">Cargando mecánicos...</option>';
+
+    try {
+        const [clients, mechanics, _] = await Promise.all([
+            getClients(),
+            getMechanics(),
+            addServiceOrderItem() 
+        ]);
+
         clientSelect.innerHTML = '<option value="" selected disabled>Seleccione un cliente...</option>';
         clients.sort((a,b) => (a.nombre || "").localeCompare(b.nombre || "")).forEach(c => {
             clientSelect.add(new Option(`${c.nombre} (Placa: ${c.placa || 'N/A'})`, c.id));
         });
-        if (orderId) loadServiceOrderForEditing(orderId); // Load data if editing, after clients are loaded
-    }).catch(err => clientSelect.innerHTML = '<option value="">Error al cargar clientes</option>');
 
-    const mechanicSelect = document.getElementById('soMechanic');
-    mechanicSelect.innerHTML = '<option value="">Cargando mecánicos...</option>';
-    getMechanics().then(mechanics => {
         mechanicSelect.innerHTML = '<option value="" selected disabled>Seleccione mecánico...</option>';
         mechanics.forEach(m => {
             mechanicSelect.add(new Option(m.usuario, m.id));
         });
-         // If editing, and client was selected and now mechanics are loaded, ensure order data is fully loaded
-        if (orderId && clientSelect.value) loadServiceOrderForEditing(orderId);
-    }).catch(err => mechanicSelect.innerHTML = '<option value="">Error al cargar mecánicos</option>');
+        
+        if (orderId) {
+            await loadServiceOrderForEditing(orderId);
+        }
+    } catch (err) {
+        clientSelect.innerHTML = '<option value="">Error al cargar clientes</option>';
+        mechanicSelect.innerHTML = '<option value="">Error al cargar mecánicos</option>';
+        if (!orderId) addServiceOrderItem(); 
+        console.error("Error preparando modal de orden:", err);
+    }
 
     document.getElementById('soEntryDate').value = new Date().toISOString().split('T')[0];
     modal.show();
 }
 
-function loadServiceOrderForEditing(orderId) {
+async function loadServiceOrderForEditing(orderId) {
     document.getElementById('serviceOrderModalLabel').textContent = `Editar Orden de Servicio #${orderId}`;
     document.getElementById('editServiceOrderId').value = orderId;
 
@@ -1238,32 +1323,42 @@ function loadServiceOrderForEditing(orderId) {
     const store = transaction.objectStore('serviceOrders');
     const request = store.get(orderId);
 
-    request.onsuccess = (event) => {
-        const order = event.target.result;
-        if (order) {
-            document.getElementById('soClient').value = order.clienteId;
-            updateVehicleInfoForServiceOrder(order.clienteId, order.vehicleInfo);
-            document.getElementById('soEntryDate').value = order.entryDate ? order.entryDate.split('T')[0] : '';
-            document.getElementById('soMechanic').value = order.mechanicId || '';
-            document.getElementById('soStatus').value = order.status;
-            document.getElementById('soProblemDescription').value = order.problemDescription || '';
-            document.getElementById('soNotes').value = order.notes || '';
-            
-            const itemsContainer = document.getElementById('serviceOrderItemsContainer');
-            itemsContainer.innerHTML = '';
-            if (order.items && order.items.length > 0) {
-                order.items.forEach(item => addServiceOrderItem(item));
+    return new Promise((resolve, reject) => {
+        request.onsuccess = async (event) => { // Marcar como async
+            const order = event.target.result;
+            if (order) {
+                document.getElementById('soClient').value = order.clienteId;
+                updateVehicleInfoForServiceOrder(order.clienteId, order.vehicleInfo);
+                document.getElementById('soEntryDate').value = order.entryDate ? order.entryDate.split('T')[0] : '';
+                document.getElementById('soMechanic').value = order.mechanicId || '';
+                document.getElementById('soStatus').value = order.status;
+                document.getElementById('soProblemDescription').value = order.problemDescription || '';
+                document.getElementById('soNotes').value = order.notes || '';
+                
+                const itemsContainer = document.getElementById('serviceOrderItemsContainer');
+                itemsContainer.innerHTML = '';
+                if (order.items && order.items.length > 0) {
+                    for (const item of order.items) { // Usar for...of con await si addServiceOrderItem es async
+                        await addServiceOrderItem(item); 
+                    }
+                } else {
+                     await addServiceOrderItem(); 
+                }
+                calculateServiceOrderTotal();
+                resolve();
             } else {
-                 addServiceOrderItem();
+                alert("Orden no encontrada.");
+                bootstrap.Modal.getInstance(document.getElementById('serviceOrderModal'))?.hide();
+                reject("Orden no encontrada");
             }
-            calculateServiceOrderTotal();
-        } else {
-            alert("Orden no encontrada.");
-            bootstrap.Modal.getInstance(document.getElementById('serviceOrderModal'))?.hide();
+        };
+        request.onerror = (e) => {
+            alert("Error cargando orden: " + e.target.error.message);
+            reject(e.target.error.message);
         }
-    };
-    request.onerror = (e) => alert("Error cargando orden: " + e.target.error.message);
+    });
 }
+
 
 function updateVehicleInfoForServiceOrder(clientId, prefillText = null) {
     const vehicleInfoInput = document.getElementById('soVehicleInfo');
@@ -1281,18 +1376,85 @@ function updateVehicleInfoForServiceOrder(clientId, prefillText = null) {
     request.onerror = () => vehicleInfoInput.value = 'Error al cargar vehículo.';
 }
 
-function addServiceOrderItem(item = null) {
+async function addServiceOrderItem(item = null) {
     const container = document.getElementById('serviceOrderItemsContainer');
     const itemDiv = document.createElement('div');
     itemDiv.className = 'service-order-item row gx-2 mb-2 align-items-center';
+
+    let inventoryOptionsHtml = '<option value="" selected>Seleccione pieza o servicio...</option>';
+    inventoryOptionsHtml += '<option value="_manual_">Otro (Describir Manualmente)</option>';
+
+    try {
+        const inventoryItems = await getInventoryItems();
+        inventoryItems.sort((a,b) => (a.name || "").localeCompare(b.name || ""));
+        inventoryItems.forEach(invItem => {
+            inventoryOptionsHtml += `<option value="${invItem.id}" data-price="${invItem.price || 0}">${invItem.name} (Stock: ${invItem.stock || 0}) - $${(invItem.price || 0).toFixed(2)}</option>`;
+        });
+    } catch (error) {
+        console.error("Error al cargar inventario para item de orden:", error);
+        inventoryOptionsHtml += '<option value="" disabled>Error al cargar inventario</option>';
+    }
+    
     itemDiv.innerHTML = `
-        <div class="col-md-5"><input type="text" class="form-control form-control-sm so-item-description" placeholder="Descripción servicio/pieza" value="${item?.description || ''}"></div>
-        <div class="col-md-2"><input type="number" class="form-control form-control-sm so-item-quantity" placeholder="Cant." value="${item?.quantity || 1}" min="0.1" step="0.1" oninput="calculateServiceOrderItemTotal(this)"></div>
-        <div class="col-md-2"><input type="number" class="form-control form-control-sm so-item-price" placeholder="Precio U." value="${item?.price || ''}" min="0" step="0.01" oninput="calculateServiceOrderItemTotal(this)"></div>
-        <div class="col-md-2"><input type="text" class="form-control form-control-sm so-item-total bg-light" placeholder="Total" value="${item?.total ? item.total.toFixed(2) : '0.00'}" readonly></div>
-        <div class="col-md-1"><button type="button" class="btn btn-sm btn-danger w-100" onclick="removeServiceOrderItem(this)" title="Eliminar ítem"><i class="fas fa-trash"></i></button></div>`;
+        <div class="col-md-4">
+            <select class="form-select form-select-sm so-item-select" onchange="handleServiceItemSelection(this)">
+                ${inventoryOptionsHtml}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control form-control-sm so-item-description d-none" placeholder="Descripción manual" value="${item?.description || ''}">
+        </div>
+        <div class="col-md-1">
+            <input type="number" class="form-control form-control-sm so-item-quantity" placeholder="Cant." value="${item?.quantity || 1}" min="0.1" step="0.1" oninput="calculateServiceOrderItemTotal(this)">
+        </div>
+        <div class="col-md-2">
+            <input type="number" class="form-control form-control-sm so-item-price" placeholder="Precio U." value="${item?.price || ''}" min="0" step="0.01" oninput="calculateServiceOrderItemTotal(this)">
+        </div>
+        <div class="col-md-1">
+            <input type="text" class="form-control form-control-sm so-item-total bg-light" placeholder="Total" value="${item?.total ? item.total.toFixed(2) : '0.00'}" readonly>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-sm btn-danger w-100" onclick="removeServiceOrderItem(this)" title="Eliminar ítem"><i class="fas fa-trash"></i></button>
+        </div>
+    `;
     container.appendChild(itemDiv);
-    if(item) calculateServiceOrderItemTotal(itemDiv.querySelector('.so-item-quantity'));
+
+    if (item) {
+        const selectElement = itemDiv.querySelector('.so-item-select');
+        const descriptionInput = itemDiv.querySelector('.so-item-description');
+        if (item.inventoryItemId) {
+            selectElement.value = item.inventoryItemId;
+             descriptionInput.classList.add('d-none'); 
+        } else { 
+            selectElement.value = "_manual_";
+            descriptionInput.value = item.description;
+            descriptionInput.classList.remove('d-none'); 
+        }
+        calculateServiceOrderItemTotal(itemDiv.querySelector('.so-item-quantity'));
+    }
+}
+
+function handleServiceItemSelection(selectElement) {
+    const itemRow = selectElement.closest('.service-order-item');
+    const descriptionInput = itemRow.querySelector('.so-item-description');
+    const priceInput = itemRow.querySelector('.so-item-price');
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+
+    if (selectElement.value === "_manual_") {
+        descriptionInput.classList.remove('d-none');
+        descriptionInput.value = '';
+        priceInput.value = '';
+        descriptionInput.focus();
+    } else if (selectElement.value) {
+        descriptionInput.classList.add('d-none');
+        descriptionInput.value = selectedOption.text.split(' (Stock:')[0];
+        priceInput.value = selectedOption.dataset.price || '0';
+    } else {
+        descriptionInput.classList.add('d-none');
+        descriptionInput.value = '';
+        priceInput.value = '';
+    }
+    calculateServiceOrderItemTotal(selectElement);
 }
 
 function removeServiceOrderItem(button) {
@@ -1320,28 +1482,22 @@ function calculateServiceOrderTotal() {
 
 // Dashboard Data Loading
 function loadDashboardData() {
-    // Active Service Orders Count
     getServiceOrders().then(orders => {
         const activeOrders = orders.filter(o => o.status !== 'Completado' && o.status !== 'Facturado' && o.status !== 'Cancelado');
         document.getElementById('activeOrdersCount').textContent = activeOrders.length;
     }).catch(err => document.getElementById('activeOrdersCount').textContent = 'E');
 
-    // Today's Appointments Count and List
     const todayStart = new Date(); todayStart.setHours(0,0,0,0);
     const todayEnd = new Date(); todayEnd.setHours(23,59,59,999);
-    // Para el dashboard, también necesitamos citas de mañana
     const tomorrowStart = new Date(todayStart); tomorrowStart.setDate(todayStart.getDate() + 1);
     const tomorrowEnd = new Date(todayEnd); tomorrowEnd.setDate(todayEnd.getDate() + 1);
 
-    // Fetch para hoy y mañana
     Promise.all([getAppointments(todayStart, todayEnd), getAppointments(tomorrowStart, tomorrowEnd)])
         .then(([todayAppointments, tomorrowAppointments]) => {
             document.getElementById('todayAppointmentsCount').textContent = todayAppointments.length;
-
             const upcomingAppointments = [...todayAppointments, ...tomorrowAppointments]
-                .sort((a,b) => new Date(a.fecha) - new Date(b.fecha)) // Ordenar cronológicamente
-                .slice(0, 10); // Limitar a 10 para el dashboard
-
+                .sort((a,b) => new Date(a.fecha) - new Date(b.fecha))
+                .slice(0, 10);
             const upcomingBody = document.getElementById('upcomingAppointmentsTable');
             upcomingBody.innerHTML = '';
             if(upcomingAppointments.length === 0) {
@@ -1352,11 +1508,10 @@ function loadDashboardData() {
                     const statusBadge = getStatusBadge(app.status);
                     const appDate = new Date(app.fecha);
                     const dateLabel = appDate.toDateString() === todayStart.toDateString() ? 'Hoy' : 'Mañana';
-
                     tr.innerHTML = `
                         <td>${dateLabel} ${appDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
                         <td>${app.clientName}</td>
-                        <td>${app.vehicleInfo || 'N/A'}</td>
+                        <td>${app.vehicleInfo || 'N/A'}</td> 
                         <td>${app.service}</td>
                         <td><span class="badge ${statusBadge.class}">${statusBadge.text}</span></td>
                     `;
@@ -1364,16 +1519,15 @@ function loadDashboardData() {
             }
         }).catch(err => document.getElementById('todayAppointmentsCount').textContent = 'E');
 
-    // Low Stock Items Count - CORREGIDO
     getInventoryItems().then(items => {
         const lowStock = items.filter(item => item.stock <= item.minStock);
         const lowStockCountElement = document.getElementById('lowStockItemsCount');
-        if (lowStockCountElement) { // Verificar que el elemento exista
-             lowStockCountElement.textContent = lowStock.length; // Actualizar el texto
+        if (lowStockCountElement) {
+             lowStockCountElement.textContent = lowStock.length;
         }
     }).catch(err => {
          const lowStockCountElement = document.getElementById('lowStockItemsCount');
-         if(lowStockCountElement) lowStockCountElement.textContent = 'E'; // Mostrar error si falla
+         if(lowStockCountElement) lowStockCountElement.textContent = 'E';
     });
 }
 
@@ -1410,7 +1564,6 @@ async function displayClientRecommendations() {
 
     recommendationsList.innerHTML = '<li class="list-group-item"><div class="loading-spinner me-2"></div>Buscando recomendaciones...</li>';
     recommendationsSection.classList.remove('d-none');
-
 
     try {
         const clientData = await getClientDataForExport(clientId); 
@@ -1535,27 +1688,24 @@ function scheduleServiceFromClientModal() {
         return;
     }
 
-    // Cerrar el modal actual de detalles
     const clientModal = bootstrap.Modal.getInstance(modalElement);
     if (clientModal) {
         clientModal.hide();
     }
 
-    // Abrir el modal de órdenes de servicio y preseleccionar cliente
-    prepareServiceOrderModal(); // Llama a la función que abre y prepara el modal
+    prepareServiceOrderModal(); 
 
-    // Esperar un breve momento para que el modal se inicialice y el select se llene
     setTimeout(() => {
         const clientSelect = document.getElementById('soClient');
         if (clientSelect) {
             clientSelect.value = clientId;
-            // Actualizar la info del vehículo basado en la selección
             updateVehicleInfoForServiceOrder(clientId);
         } else {
             console.error("El select de cliente en el modal de orden no se encontró a tiempo.");
         }
-    }, 500); // 500ms de espera, ajustar si es necesario
+    }, 500); 
 }
+
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
@@ -1638,7 +1788,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     tipo: document.getElementById('maintenanceType').value
                 };
                 if (isNaN(data.kilometraje) || isNaN(data.costo)) { alert("Kilometraje y Costo deben ser números."); return; }
-                addMaintenanceData(data).then(() => { e.target.reset(); /* generateAnalysis(); Replaced */ alert('Dato agregado.'); })
+                addMaintenanceData(data).then(() => { e.target.reset(); alert('Dato agregado.'); })
                                         .catch(err => alert('Error: ' + err));
             });
 
@@ -1701,12 +1851,31 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             function saveFinalOrder(orderId, orderData){
+                 orderData.items = []; // Reset items before populating
                  document.querySelectorAll('#serviceOrderItemsContainer .service-order-item').forEach(row => {
-                    const description = row.querySelector('.so-item-description').value;
+                    const selectElement = row.querySelector('.so-item-select');
+                    const descriptionInput = row.querySelector('.so-item-description');
+                    let description;
+                    let inventoryItemId = null;
+             
+                    if (selectElement.value === "_manual_" || !selectElement.value) {
+                        description = descriptionInput.value.trim();
+                    } else {
+                        description = selectElement.options[selectElement.selectedIndex].text.split(' (Stock:')[0];
+                        inventoryItemId = parseInt(selectElement.value);
+                    }
+
                     const quantity = parseFloat(row.querySelector('.so-item-quantity').value);
                     const price = parseFloat(row.querySelector('.so-item-price').value);
+
                     if (description && !isNaN(quantity) && !isNaN(price)) {
-                        orderData.items.push({ description, quantity, price, total: quantity * price });
+                        orderData.items.push({ 
+                            description, 
+                            quantity, 
+                            price, 
+                            total: quantity * price,
+                            inventoryItemId 
+                         });
                     }
                 });
 
@@ -1715,9 +1884,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const promise = orderId ? updateServiceOrder({ ...orderData, id: parseInt(orderId) }) : addServiceOrder(orderData);
-                promise.then(() => {
+                promise.then(async (savedOrderResult) => { 
+                    const currentOrderId = orderId ? parseInt(orderId) : savedOrderResult; 
+                    let fullOrderData = orderData; 
+                    if (typeof savedOrderResult === 'number' && !orderId) { // Es una nueva orden, necesitamos buscarla para tener el objeto completo
+                        const tx = db.transaction(['serviceOrders'], 'readonly');
+                        const store = tx.objectStore('serviceOrders');
+                        const req = store.get(savedOrderResult);
+                        fullOrderData = await new Promise((res, rej) => {
+                            req.onsuccess = (e_req) => res(e_req.target.result); // Renamed e to e_req
+                            req.onerror = (e_req_err) => rej(e_req_err.target.error); // Renamed e to e_req_err
+                        });
+                    } else if (orderId) { // Es una actualización, orderData ya tiene la ID
+                        fullOrderData.id = parseInt(orderId);
+                    }
+                    
                     bootstrap.Modal.getInstance(document.getElementById('serviceOrderModal'))?.hide();
                     alert(`Orden ${orderId ? 'actualizada' : 'creada'} correctamente.`);
+                    
+                    if (fullOrderData && fullOrderData.status === 'Completado') {
+                        if (confirm("La orden ha sido marcada como completada. ¿Desea descargar el PDF de la orden ahora?")) {
+                            exportServiceOrderToPdf(fullOrderData);
+                        }
+                    }
                 }).catch(err => alert('Error guardando orden: ' + err));
             }
 

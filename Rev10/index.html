@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VW Taller Pro</title>
+    <title>Volkswagen Taller Pro</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -232,13 +232,11 @@
                         </div>
                     </div>
 
-                    <!-- Pestaña de Análisis (Admin Only) -->
+                    <!-- Pestaña de Análisis y Recomendaciones (Admin Only) -->
                     <div id="analyticsTab" class="tab-content d-none admin-only">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <h1 class="h2">Análisis y Recomendaciones</h1>
                         </div>
-
-                        <!-- Selector de Cliente para Recomendaciones -->
                         <div class="card mb-4">
                             <div class="card-header">Generar Recomendaciones para Cliente</div>
                             <div class="card-body">
@@ -257,8 +255,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Sección de Recomendaciones -->
                         <div id="clientRecommendationsSection" class="card d-none">
                             <div class="card-header bg-info text-white">
                                 <h5 class="mb-0">Recomendaciones para <span id="recommendationClientName"></span></h5>
@@ -269,192 +265,54 @@
                                 </ul>
                             </div>
                         </div>
-
-                        <!-- Formulario para Ingresar Datos de Mantenimiento (Manual) - Se mantiene por si es útil -->
                         <div class="card mb-4 admin-only mt-4">
                             <div class="card-header">Ingresar Datos de Mantenimiento Manualmente (para Análisis Histórico)</div>
-                            <div class="card-body">
-                                <form id="maintenanceDataForm">
-                                     <div class="row">
-                                        <div class="col-md-4 mb-3">
-                                            <label for="mileage" class="form-label">Kilometraje <span class="text-danger">*</span></label>
-                                            <input type="number" class="form-control" id="mileage" required min="0">
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <label for="maintenanceCost" class="form-label">Costo ($) <span class="text-danger">*</span></label>
-                                            <input type="number" class="form-control" id="maintenanceCost" required min="0" step="0.01">
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <label for="maintenanceType" class="form-label">Tipo <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="maintenanceType" required>
-                                                <option value="preventivo">Preventivo</option>
-                                                <option value="correctivo">Correctivo</option>
-                                                 <option value="diagnostico">Diagnóstico</option>
-                                                 <option value="otro">Otro</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-secondary">
-                                        <i class="fas fa-plus me-1"></i>Agregar Dato Manual
-                                    </button>
-                                </form>
-                            </div>
+                            <div class="card-body"><form id="maintenanceDataForm"><div class="row"><div class="col-md-4 mb-3"><label for="mileage" class="form-label">Kilometraje <span class="text-danger">*</span></label><input type="number" class="form-control" id="mileage" required min="0"></div><div class="col-md-4 mb-3"><label for="maintenanceCost" class="form-label">Costo ($) <span class="text-danger">*</span></label><input type="number" class="form-control" id="maintenanceCost" required min="0" step="0.01"></div><div class="col-md-4 mb-3"><label for="maintenanceType" class="form-label">Tipo <span class="text-danger">*</span></label><select class="form-select" id="maintenanceType" required><option value="preventivo">Preventivo</option><option value="correctivo">Correctivo</option><option value="diagnostico">Diagnóstico</option><option value="otro">Otro</option></select></div></div><button type="submit" class="btn btn-secondary"><i class="fas fa-plus me-1"></i>Agregar Dato Manual</button></form></div>
                         </div>
-
-                        <!-- Componentes React (se mantienen si se usan para otras cosas) -->
                         <div class="card mb-4 admin-only mt-4">
-                            <div class="card-header bg-primary text-white">
-                                <h5 class="mb-0"><i class="fas fa-brain me-2"></i>Análisis Predictivo Avanzado (TensorFlow.js)</h5>
-                            </div>
-                            <div class="card-body">
-                                <div id="predictiveAnalysisReactRoot">
-                                     <div class="text-center p-5"><div class="loading-spinner mx-auto"></div> Cargando componente predictivo...</div>
-                                </div>
-                            </div>
+                            <div class="card-header bg-primary text-white"><h5 class="mb-0"><i class="fas fa-brain me-2"></i>Análisis Predictivo Avanzado (TensorFlow.js)</h5></div>
+                            <div class="card-body"><div id="predictiveAnalysisReactRoot"><div class="text-center p-5"><div class="loading-spinner mx-auto"></div> Cargando componente...</div></div></div>
                         </div>
-
                         <div class="card mb-4 admin-only mt-4">
-                            <div class="card-header bg-info text-white">
-                                <h5 class="mb-0"><i class="fas fa-balance-scale me-2"></i>Comparativa de Talleres</h5>
-                            </div>
-                            <div class="card-body">
-                                <div id="workshopComparisonReactRoot">
-                                     <div class="text-center p-5"><div class="loading-spinner mx-auto"></div> Cargando componente de comparación...</div>
-                                </div>
-                            </div>
+                            <div class="card-header bg-info text-white"><h5 class="mb-0"><i class="fas fa-balance-scale me-2"></i>Comparativa de Talleres</h5></div>
+                            <div class="card-body"><div id="workshopComparisonReactRoot"><div class="text-center p-5"><div class="loading-spinner mx-auto"></div> Cargando componente...</div></div></div>
                         </div>
-                    </div> <!-- End Analytics Tab -->
-
+                    </div>
 
                     <!-- Pestaña de Reportes (Admin Only) -->
                      <div id="reportsTab" class="tab-content d-none admin-only">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"><h1 class="h2">Reportes Avanzados</h1></div>
                         <div class="card mb-4"><div class="card-header">Generar Reporte Mensual</div><div class="card-body"><div class="row g-3 align-items-end"><div class="col-md-4"><label for="reportType" class="form-label">Tipo de Reporte</label><select class="form-select" id="reportType"><option value="services" selected>Servicios Realizados</option><option value="mechanics">Rendimiento Mecánicos</option><option value="inventory">Estado de Inventario</option><option value="vehicles">Resumen de Vehículos</option></select></div><div class="col-md-4"><label for="reportMonth" class="form-label">Mes</label><input type="month" class="form-control" id="reportMonth"></div><div class="col-md-4"><button class="btn btn-primary w-100" id="generateReportBtn" onclick="generateReport()"><i class="fas fa-cogs me-1"></i> Generar Reporte</button></div></div><hr><div id="reportContent"><p class="text-muted text-center mt-3">Seleccione opciones y genere reporte.</p></div></div></div>
                         <div class="card mb-4"><div class="card-header bg-success text-white"><h5 class="mb-0"><i class="fas fa-file-export me-2"></i>Exportación Avanzada (Historial Completo)</h5></div><div class="card-body"><div class="row g-3 align-items-end"><div class="col-md-3"><label for="exportFormat" class="form-label">Formato:</label><select class="form-select" id="exportFormat" onchange="document.getElementById('includeGraphics').disabled = (this.value !== 'pdf')"><option value="csv" selected>CSV</option><option value="json">JSON</option><option value="pdf">PDF</option><option value="excel" disabled>Excel</option></select></div><div class="col-md-3"><label for="includeGraphics" class="form-label">Incluir Gráficos:</label><select class="form-select" id="includeGraphics" disabled><option value="yes">Sí (si aplica)</option><option value="no" selected>No</option></select></div><div class="col-md-3"><label for="detailLevel" class="form-label">Nivel Detalle:</label><select class="form-select" id="detailLevel"><option value="summary">Resumen</option><option value="detailed" selected>Detallado</option><option value="complete">Completo</option></select></div><div class="col-md-3"><button class="btn btn-success w-100" id="exportAdvancedReportBtn" onclick="exportAdvancedReport()"><i class="fas fa-download me-1"></i> Exportar Datos</button></div></div><small class="text-muted d-block mt-2">Exporta historial completo de mantenimientos.</small></div></div>
-                    </div> <!-- End Reports Tab -->
+                    </div>
 
                 </main>
             </div> <!-- End Row -->
         </div> <!-- End Container Fluid -->
     </div> <!-- End Main Screen -->
 
-    <!-- Modales Globales (asegúrate que no estén duplicados dentro de las pestañas) -->
+    <!-- Modales Globales (Asegúrate que cada modal con ID único se defina solo UNA VEZ en todo el HTML) -->
     <div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <form id="clientForm">
-                    <div class="modal-header"><h5 class="modal-title" id="addClientModalLabel">Agregar Nuevo Cliente</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
-                    <div class="modal-body">
-                        <h6>Información del Cliente</h6>
-                        <div class="row"><div class="col-md-6 mb-3"><label for="clientName" class="form-label">Nombre <span class="text-danger">*</span></label><input type="text" class="form-control" id="clientName" required></div><div class="col-md-6 mb-3"><label for="clientEmail" class="form-label">Correo</label><input type="email" class="form-control" id="clientEmail"></div></div><hr>
-                        <h6>Información del Vehículo</h6>
-                        <div class="row"><div class="col-md-4 mb-3"><label for="clientPlate" class="form-label">Placa <span class="text-danger">*</span></label><input type="text" class="form-control text-uppercase" id="clientPlate" required></div><div class="col-md-4 mb-3"><label for="carMake" class="form-label">Marca <span class="text-danger">*</span></label><input type="text" class="form-control" id="carMake" required></div><div class="col-md-4 mb-3"><label for="carModel" class="form-label">Modelo <span class="text-danger">*</span></label><input type="text" class="form-control" id="carModel" required></div></div>
-                        <div class="row"><div class="col-md-4 mb-3"><label for="carYear" class="form-label">Año</label><input type="number" class="form-control" id="carYear" min="1900" max="2100"></div><div class="col-md-4 mb-3"><label for="carMileage" class="form-label">Kilometraje Actual</label><input type="number" class="form-control" id="carMileage" min="0"></div><div class="col-md-4 mb-3"><label for="revisionType" class="form-label">Motivo Visita Inicial</label><select class="form-select" id="revisionType" required><option value="" selected disabled>Seleccione...</option><option value="Aceite">Aceite</option><option value="Frenos">Frenos</option><option value="Motor">Motor</option><option value="Suspensión">Suspensión</option><option value="Transmisión">Transmisión</option><option value="General">Revisión General</option><option value="Otro">Otro</option></select></div></div>
-                        <div class="row"><div class="col-md-6 mb-3"><label for="carSoat" class="form-label">Vencimiento SOAT</label><input type="date" class="form-control" id="carSoat"></div><div class="col-md-6 mb-3"><label for="carTechReview" class="form-label">Vencimiento Rev. Técnica</label><input type="date" class="form-control" id="carTechReview"></div></div>
-                    </div>
-                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Agregar Cliente</button></div>
-                </form>
-            </div>
-        </div>
+        <div class="modal-dialog modal-lg"><div class="modal-content"><form id="clientForm"><div class="modal-header"><h5 class="modal-title" id="addClientModalLabel">Agregar Nuevo Cliente</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><h6>Información del Cliente</h6><div class="row"><div class="col-md-6 mb-3"><label for="clientName" class="form-label">Nombre <span class="text-danger">*</span></label><input type="text" class="form-control" id="clientName" required></div><div class="col-md-6 mb-3"><label for="clientEmail" class="form-label">Correo</label><input type="email" class="form-control" id="clientEmail"></div></div><hr><h6>Información del Vehículo</h6><div class="row"><div class="col-md-4 mb-3"><label for="clientPlate" class="form-label">Placa <span class="text-danger">*</span></label><input type="text" class="form-control text-uppercase" id="clientPlate" required></div><div class="col-md-4 mb-3"><label for="carMake" class="form-label">Marca <span class="text-danger">*</span></label><input type="text" class="form-control" id="carMake" required></div><div class="col-md-4 mb-3"><label for="carModel" class="form-label">Modelo <span class="text-danger">*</span></label><input type="text" class="form-control" id="carModel" required></div></div><div class="row"><div class="col-md-4 mb-3"><label for="carYear" class="form-label">Año</label><input type="number" class="form-control" id="carYear" min="1900" max="2100"></div><div class="col-md-4 mb-3"><label for="carMileage" class="form-label">Kilometraje Actual</label><input type="number" class="form-control" id="carMileage" min="0"></div><div class="col-md-4 mb-3"><label for="revisionType" class="form-label">Motivo Visita Inicial</label><select class="form-select" id="revisionType" required><option value="" selected disabled>Seleccione...</option><option value="Aceite">Aceite</option><option value="Frenos">Frenos</option><option value="Motor">Motor</option><option value="Suspensión">Suspensión</option><option value="Transmisión">Transmisión</option><option value="General">Revisión General</option><option value="Otro">Otro</option></select></div></div><div class="row"><div class="col-md-6 mb-3"><label for="carSoat" class="form-label">Vencimiento SOAT</label><input type="date" class="form-control" id="carSoat"></div><div class="col-md-6 mb-3"><label for="carTechReview" class="form-label">Vencimiento Rev. Técnica</label><input type="date" class="form-control" id="carTechReview"></div></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Agregar Cliente</button></div></form></div></div>
     </div>
     <div class="modal fade" id="clientDetailsModal" tabindex="-1" aria-labelledby="clientDetailsModalLabel" aria-hidden="true" data-client-id="">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header"><h5 class="modal-title" id="clientDetailsModalLabel">Detalles del Cliente y Vehículo</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
-                <div class="modal-body">
-                    <div class="card mb-3"><div class="card-body"><div class="row"><div class="col-md-6"><h6>Información del Cliente</h6><p class="mb-1"><strong>Nombre:</strong> <span id="modalClientName">-</span></p><p class="mb-1"><strong>Correo:</strong> <span id="modalClientEmail">-</span></p></div><div class="col-md-6"><h6>Información del Vehículo</h6><p class="mb-1"><strong>Vehículo:</strong> <span id="modalCarInfo">-</span></p><p class="mb-1"><strong>Última Revisión/Motivo:</strong> <span id="modalLastRevision">-</span></p></div></div></div></div>
-                    <div class="card mb-3"><div class="card-header">Historial de Mantenimientos</div><div class="card-body p-0"><div class="table-responsive"><table class="table table-sm table-striped mb-0"><thead><tr><th>Fecha</th><th>Tipo</th><th>Kilometraje</th><th>Costo</th><th>Estado</th><th>Mecánico</th></tr></thead><tbody id="visitHistoryTable"><tr><td colspan="6" class="text-center p-3"><div class="loading-spinner mx-auto"></div> Cargando historial...</td></tr></tbody></table></div></div></div>
-                    <div id="clientExpensesChartContainer" class="card admin-only d-none"><div class="card-header">Historial de Gastos Mensuales</div><div class="card-body"><div class="chart-container" style="height: 250px;"><canvas id="clientExpensesChart"></canvas></div></div></div>
-                </div>
-                <div class="modal-footer"><button type="button" class="btn btn-outline-primary" onclick="exportClientToPdf()"><i class="fas fa-file-pdf me-1"></i> PDF</button><button type="button" class="btn btn-outline-success" onclick="exportClientToCsv()"><i class="fas fa-file-csv me-1"></i> CSV</button><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button></div>
-            </div>
-        </div>
+        <div class="modal-dialog modal-xl"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="clientDetailsModalLabel">Detalles del Cliente y Vehículo</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="card mb-3"><div class="card-body"><div class="row"><div class="col-md-6"><h6>Información del Cliente</h6><p class="mb-1"><strong>Nombre:</strong> <span id="modalClientName">-</span></p><p class="mb-1"><strong>Correo:</strong> <span id="modalClientEmail">-</span></p></div><div class="col-md-6"><h6>Información del Vehículo</h6><p class="mb-1"><strong>Vehículo:</strong> <span id="modalCarInfo">-</span></p><p class="mb-1"><strong>Última Revisión/Motivo:</strong> <span id="modalLastRevision">-</span></p></div></div></div></div><div class="card mb-3"><div class="card-header">Historial de Mantenimientos</div><div class="card-body p-0"><div class="table-responsive"><table class="table table-sm table-striped mb-0"><thead><tr><th>Fecha</th><th>Tipo</th><th>Kilometraje</th><th>Costo</th><th>Estado</th><th>Mecánico</th></tr></thead><tbody id="visitHistoryTable"><tr><td colspan="6" class="text-center p-3"><div class="loading-spinner mx-auto"></div> Cargando...</td></tr></tbody></table></div></div></div><div id="clientExpensesChartContainer" class="card admin-only d-none"><div class="card-header">Historial de Gastos Mensuales</div><div class="card-body"><div class="chart-container" style="height: 250px;"><canvas id="clientExpensesChart"></canvas></div></div></div></div><div class="modal-footer"><button type="button" class="btn btn-primary me-auto" onclick="scheduleServiceFromClientModal()"><i class="fas fa-tools me-1"></i> Agendar Servicio</button><button type="button" class="btn btn-outline-primary" onclick="exportClientToPdf()"><i class="fas fa-file-pdf me-1"></i> PDF</button><button type="button" class="btn btn-outline-success" onclick="exportClientToCsv()"><i class="fas fa-file-csv me-1"></i> CSV</button><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button></div></div></div>
     </div>
     <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form id="appointmentForm">
-                    <div class="modal-header"><h5 class="modal-title" id="appointmentModalLabel">Agendar Cita</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
-                    <div class="modal-body"><div class="mb-3"><label for="appointmentClient" class="form-label">Cliente <span class="text-danger">*</span></label><select class="form-select" id="appointmentClient" required><option value="">Cargando clientes...</option></select></div><div class="row"><div class="col-md-6 mb-3"><label for="appointmentDate" class="form-label">Fecha <span class="text-danger">*</span></label><input type="date" class="form-control" id="appointmentDate" required></div><div class="col-md-6 mb-3"><label for="appointmentTime" class="form-label">Hora <span class="text-danger">*</span></label><input type="time" class="form-control" id="appointmentTime" required min="08:00" max="18:00" step="1800"></div></div><div class="mb-3"><label for="appointmentService" class="form-label">Tipo de Servicio <span class="text-danger">*</span></label><select class="form-select" id="appointmentService" required><option value="" selected disabled>Seleccione...</option><option value="Aceite">Cambio de Aceite</option><option value="Frenos">Revisión de Frenos</option><option value="Motor">Diagnóstico de Motor</option><option value="Suspensión">Revisión de Suspensión</option><option value="Transmisión">Servicio de Transmisión</option><option value="Llantas">Rotación/Balanceo Llantas</option><option value="General">Mantenimiento General</option><option value="Otro">Otro</option></select></div><div class="mb-3"><label for="appointmentNotes" class="form-label">Notas Adicionales</label><textarea class="form-control" id="appointmentNotes" rows="3"></textarea></div></div>
-                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Agendar Cita</button></div>
-                </form>
-            </div>
-        </div>
+        <div class="modal-dialog"><div class="modal-content"><form id="appointmentForm"><div class="modal-header"><h5 class="modal-title" id="appointmentModalLabel">Agendar Cita</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="mb-3"><label for="appointmentClient" class="form-label">Cliente <span class="text-danger">*</span></label><select class="form-select" id="appointmentClient" required><option value="">Cargando...</option></select></div><div class="row"><div class="col-md-6 mb-3"><label for="appointmentDate" class="form-label">Fecha <span class="text-danger">*</span></label><input type="date" class="form-control" id="appointmentDate" required></div><div class="col-md-6 mb-3"><label for="appointmentTime" class="form-label">Hora <span class="text-danger">*</span></label><input type="time" class="form-control" id="appointmentTime" required min="08:00" max="18:00" step="1800"></div></div><div class="mb-3"><label for="appointmentService" class="form-label">Tipo de Servicio <span class="text-danger">*</span></label><select class="form-select" id="appointmentService" required><option value="" selected disabled>Seleccione...</option><option value="Aceite">Cambio de Aceite</option><option value="Frenos">Revisión de Frenos</option><option value="Motor">Diagnóstico de Motor</option><option value="Suspensión">Revisión de Suspensión</option><option value="Transmisión">Servicio de Transmisión</option><option value="Llantas">Rotación/Balanceo Llantas</option><option value="General">Mantenimiento General</option><option value="Otro">Otro</option></select></div><div class="mb-3"><label for="appointmentNotes" class="form-label">Notas Adicionales</label><textarea class="form-control" id="appointmentNotes" rows="3"></textarea></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Agendar Cita</button></div></form></div></div>
     </div>
     <div class="modal fade" id="addMechanicModal" tabindex="-1" aria-labelledby="addMechanicModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form id="mechanicForm">
-                    <div class="modal-header"><h5 class="modal-title" id="addMechanicModalLabel">Agregar Nuevo Mecánico</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
-                    <div class="modal-body"><div class="mb-3"><label for="mechanicUsername" class="form-label">Nombre de Usuario <span class="text-danger">*</span></label><input type="text" class="form-control" id="mechanicUsername" required></div><div class="mb-3"><label for="mechanicPassword" class="form-label">Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="mechanicPassword" required></div></div>
-                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Agregar Mecánico</button></div>
-                </form>
-            </div>
-        </div>
+        <div class="modal-dialog"><div class="modal-content"><form id="mechanicForm"><div class="modal-header"><h5 class="modal-title" id="addMechanicModalLabel">Agregar Nuevo Mecánico</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="mb-3"><label for="mechanicUsername" class="form-label">Usuario <span class="text-danger">*</span></label><input type="text" class="form-control" id="mechanicUsername" required></div><div class="mb-3"><label for="mechanicPassword" class="form-label">Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="mechanicPassword" required></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Agregar Mecánico</button></div></form></div></div>
     </div>
     <div class="modal fade" id="inventoryModal" tabindex="-1" aria-labelledby="inventoryModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <form id="inventoryForm"><input type="hidden" id="editItemId">
-                    <div class="modal-header"><h5 class="modal-title" id="inventoryModalTitle">Agregar Pieza al Inventario</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
-                    <div class="modal-body"><div class="row"><div class="col-md-4 mb-3"><label for="partCode" class="form-label">Código <span class="text-danger">*</span></label><input type="text" class="form-control" id="partCode" required></div><div class="col-md-8 mb-3"><label for="partName" class="form-label">Nombre <span class="text-danger">*</span></label><input type="text" class="form-control" id="partName" required></div></div><div class="row"><div class="col-md-6 mb-3"><label for="partCategory" class="form-label">Categoría <span class="text-danger">*</span></label><select class="form-select" id="partCategory" required><option value="" selected disabled>Seleccione...</option><option value="Motor">Motor</option><option value="Frenos">Frenos</option><option value="Eléctrico">Eléctrico</option><option value="Suspensión">Suspensión</option><option value="Transmisión">Transmisión</option><option value="Carrocería">Carrocería</option><option value="Filtros">Filtros</option><option value="Fluidos">Fluidos</option><option value="Llantas">Llantas</option><option value="Otros">Otros</option></select></div><div class="col-md-6 mb-3"><label for="partSupplier" class="form-label">Proveedor</label><input type="text" class="form-control" id="partSupplier"></div></div><div class="row"><div class="col-md-4 mb-3"><label for="partStock" class="form-label">Stock Actual <span class="text-danger">*</span></label><input type="number" class="form-control" id="partStock" required min="0"></div><div class="col-md-4 mb-3"><label for="partMinStock" class="form-label">Stock Mínimo <span class="text-danger">*</span></label><input type="number" class="form-control" id="partMinStock" required min="0"></div><div class="col-md-4 mb-3"><label for="partPrice" class="form-label">Precio Unit. ($) <span class="text-danger">*</span></label><input type="number" class="form-control" id="partPrice" required min="0" step="0.01"></div></div><div class="mb-3"><label for="partLocation" class="form-label">Ubicación en Almacén</label><input type="text" class="form-control" id="partLocation"></div></div>
-                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" id="saveInventoryBtn" onclick="saveInventoryItem()">Guardar Pieza</button></div>
-                </form>
-            </div>
-        </div>
+        <div class="modal-dialog modal-lg"><div class="modal-content"><form id="inventoryForm"><input type="hidden" id="editItemId"><div class="modal-header"><h5 class="modal-title" id="inventoryModalTitle">Agregar Pieza</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="row"><div class="col-md-4 mb-3"><label for="partCode" class="form-label">Código <span class="text-danger">*</span></label><input type="text" class="form-control" id="partCode" required></div><div class="col-md-8 mb-3"><label for="partName" class="form-label">Nombre <span class="text-danger">*</span></label><input type="text" class="form-control" id="partName" required></div></div><div class="row"><div class="col-md-6 mb-3"><label for="partCategory" class="form-label">Categoría <span class="text-danger">*</span></label><select class="form-select" id="partCategory" required><option value="" selected disabled>Seleccione...</option><option value="Motor">Motor</option><option value="Frenos">Frenos</option><option value="Eléctrico">Eléctrico</option><option value="Suspensión">Suspensión</option><option value="Transmisión">Transmisión</option><option value="Carrocería">Carrocería</option><option value="Filtros">Filtros</option><option value="Fluidos">Fluidos</option><option value="Llantas">Llantas</option><option value="Otros">Otros</option></select></div><div class="col-md-6 mb-3"><label for="partSupplier" class="form-label">Proveedor</label><input type="text" class="form-control" id="partSupplier"></div></div><div class="row"><div class="col-md-4 mb-3"><label for="partStock" class="form-label">Stock <span class="text-danger">*</span></label><input type="number" class="form-control" id="partStock" required min="0"></div><div class="col-md-4 mb-3"><label for="partMinStock" class="form-label">Stock Mín. <span class="text-danger">*</span></label><input type="number" class="form-control" id="partMinStock" required min="0"></div><div class="col-md-4 mb-3"><label for="partPrice" class="form-label">Precio U. ($) <span class="text-danger">*</span></label><input type="number" class="form-control" id="partPrice" required min="0" step="0.01"></div></div><div class="mb-3"><label for="partLocation" class="form-label">Ubicación</label><input type="text" class="form-control" id="partLocation"></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" id="saveInventoryBtn" onclick="saveInventoryItem()">Guardar</button></div></form></div></div>
     </div>
     <div class="modal fade" id="vehicleModal" tabindex="-1" aria-labelledby="vehicleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header"><h5 class="modal-title" id="vehicleModalLabel">Detalles del Vehículo</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
-                <div class="modal-body"><div class="row"><div class="col-lg-6"><div class="vehicle-info-card mb-3"><h6><i class="fas fa-car me-2"></i>Información Básica</h6><p class="mb-1"><strong>Placa:</strong> <span id="vehiclePlate">-</span></p><p class="mb-1"><strong>Marca:</strong> <span id="vehicleMake">-</span></p><p class="mb-1"><strong>Modelo:</strong> <span id="vehicleModel">-</span></p><p class="mb-1"><strong>Año:</strong> <span id="vehicleYear">-</span></p><p class="mb-1"><strong>Kilometraje Actual:</strong> <span id="vehicleMileage">-</span></p></div></div><div class="col-lg-6"><div class="vehicle-info-card mb-3"><h6><i class="fas fa-file-alt me-2"></i>Documentación y Mantenimiento</h6><p class="mb-1"><strong>Vencimiento SOAT:</strong> <span id="vehicleSoat">-</span></p><p class="mb-1"><strong>Vencimiento Rev. Técnica:</strong> <span id="vehicleTechReview">-</span></p><p class="mb-1"><strong>Próximo Mantenimiento Sugerido:</strong> <span id="nextMaintenance" class="fw-bold text-primary">-</span></p></div></div></div><div class="card mt-2"><div class="card-header"><h6><i class="fas fa-history me-2"></i>Historial de Mantenimientos</h6></div><div class="card-body p-0"><div class="table-responsive"><table class="table table-sm table-striped mb-0" id="vehicleHistoryTable"><thead><tr><th>Fecha</th><th>Tipo</th><th>Kilometraje</th><th>Mecánico</th><th>Costo</th></tr></thead><tbody id="vehicleHistoryTableBody"><tr><td colspan="5" class="text-center p-3"><div class="loading-spinner mx-auto"></div> Cargando historial...</td></tr></tbody></table></div></div></div></div>
-                 <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button></div>
-            </div>
-        </div>
+        <div class="modal-dialog modal-xl"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="vehicleModalLabel">Detalles del Vehículo</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="row"><div class="col-lg-6"><div class="vehicle-info-card mb-3"><h6><i class="fas fa-car me-2"></i>Info Básica</h6><p class="mb-1"><strong>Placa:</strong> <span id="vehiclePlate">-</span></p><p class="mb-1"><strong>Marca:</strong> <span id="vehicleMake">-</span></p><p class="mb-1"><strong>Modelo:</strong> <span id="vehicleModel">-</span></p><p class="mb-1"><strong>Año:</strong> <span id="vehicleYear">-</span></p><p class="mb-1"><strong>Km:</strong> <span id="vehicleMileage">-</span></p></div></div><div class="col-lg-6"><div class="vehicle-info-card mb-3"><h6><i class="fas fa-file-alt me-2"></i>Documentación y Mantenimiento</h6><p class="mb-1"><strong>SOAT:</strong> <span id="vehicleSoat">-</span></p><p class="mb-1"><strong>Rev. Técnica:</strong> <span id="vehicleTechReview">-</span></p><p class="mb-1"><strong>Próx. Mant.:</strong> <span id="nextMaintenance" class="fw-bold text-primary">-</span></p></div></div></div><div class="card mt-2"><div class="card-header"><h6><i class="fas fa-history me-2"></i>Historial Mantenimientos</h6></div><div class="card-body p-0"><div class="table-responsive"><table class="table table-sm table-striped mb-0" id="vehicleHistoryTable"><thead><tr><th>Fecha</th><th>Tipo</th><th>Km</th><th>Mecánico</th><th>Costo</th></tr></thead><tbody id="vehicleHistoryTableBody"><tr><td colspan="5" class="text-center p-3"><div class="loading-spinner mx-auto"></div> Cargando...</td></tr></tbody></table></div></div></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button></div></div></div>
     </div>
     <div class="modal fade" id="serviceOrderModal" tabindex="-1" aria-labelledby="serviceOrderModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <form id="serviceOrderForm"><input type="hidden" id="editServiceOrderId">
-                    <div class="modal-header"><h5 class="modal-title" id="serviceOrderModalLabel">Nueva Orden de Servicio</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
-                    <div class="modal-body"><div class="row"><div class="col-md-6 mb-3"><label for="soClient" class="form-label">Cliente <span class="text-danger">*</span></label><select class="form-select" id="soClient" required onchange="updateVehicleInfoForServiceOrder(this.value)"></select></div><div class="col-md-6 mb-3"><label for="soVehicleInfo" class="form-label">Vehículo</label><input type="text" class="form-control" id="soVehicleInfo" readonly placeholder="Seleccione un cliente para ver vehículo"></div></div><div class="row"><div class="col-md-4 mb-3"><label for="soEntryDate" class="form-label">Fecha Ingreso <span class="text-danger">*</span></label><input type="date" class="form-control" id="soEntryDate" required></div><div class="col-md-4 mb-3"><label for="soMechanic" class="form-label">Mecánico Asignado</label><select class="form-select" id="soMechanic"></select></div><div class="col-md-4 mb-3"><label for="soStatus" class="form-label">Estado <span class="text-danger">*</span></label><select class="form-select" id="soStatus" required><option value="Pendiente" selected>Pendiente</option><option value="En Progreso">En Progreso</option><option value="Esperando Piezas">Esperando Piezas</option><option value="Listo para Entrega">Listo para Entrega</option><option value="Completado">Completado</option><option value="Facturado">Facturado</option><option value="Cancelado">Cancelado</option></select></div></div><div class="mb-3"><label for="soProblemDescription" class="form-label">Descripción del Problema (Reportado por Cliente)</label><textarea class="form-control" id="soProblemDescription" rows="2"></textarea></div><hr><h6>Servicios a Realizar y Piezas</h6><div id="serviceOrderItemsContainer"></div><button type="button" class="btn btn-sm btn-outline-secondary mt-2" onclick="addServiceOrderItem()"><i class="fas fa-plus"></i> Agregar Ítem</button><hr><div class="row justify-content-end"><div class="col-md-4"><label for="soTotalCost" class="form-label">Costo Total Estimado ($)</label><input type="number" class="form-control fw-bold fs-5" id="soTotalCost" readonly placeholder="0.00"></div></div><div class="mb-3 mt-3"><label for="soNotes" class="form-label">Notas Internas del Taller</label><textarea class="form-control" id="soNotes" rows="2"></textarea></div></div>
-                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary" id="saveServiceOrderBtn">Guardar Orden</button></div>
-                </form>
-            </div>
-        </div>
+        <div class="modal-dialog modal-xl"><div class="modal-content"><form id="serviceOrderForm"><input type="hidden" id="editServiceOrderId"><div class="modal-header"><h5 class="modal-title" id="serviceOrderModalLabel">Nueva Orden de Servicio</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="row"><div class="col-md-6 mb-3"><label for="soClient" class="form-label">Cliente <span class="text-danger">*</span></label><select class="form-select" id="soClient" required onchange="updateVehicleInfoForServiceOrder(this.value)"></select></div><div class="col-md-6 mb-3"><label for="soVehicleInfo" class="form-label">Vehículo</label><input type="text" class="form-control" id="soVehicleInfo" readonly placeholder="Seleccione cliente"></div></div><div class="row"><div class="col-md-4 mb-3"><label for="soEntryDate" class="form-label">Fecha Ingreso <span class="text-danger">*</span></label><input type="date" class="form-control" id="soEntryDate" required></div><div class="col-md-4 mb-3"><label for="soMechanic" class="form-label">Mecánico Asignado</label><select class="form-select" id="soMechanic"></select></div><div class="col-md-4 mb-3"><label for="soStatus" class="form-label">Estado <span class="text-danger">*</span></label><select class="form-select" id="soStatus" required><option value="Pendiente" selected>Pendiente</option><option value="En Progreso">En Progreso</option><option value="Esperando Piezas">Esperando Piezas</option><option value="Listo para Entrega">Listo para Entrega</option><option value="Completado">Completado</option><option value="Facturado">Facturado</option><option value="Cancelado">Cancelado</option></select></div></div><div class="mb-3"><label for="soProblemDescription" class="form-label">Problema Reportado</label><textarea class="form-control" id="soProblemDescription" rows="2"></textarea></div><hr><h6>Servicios y Piezas</h6><div id="serviceOrderItemsContainer"></div><button type="button" class="btn btn-sm btn-outline-secondary mt-2" onclick="addServiceOrderItem()"><i class="fas fa-plus"></i> Agregar Ítem</button><hr><div class="row justify-content-end"><div class="col-md-4"><label for="soTotalCost" class="form-label">Costo Total Estimado ($)</label><input type="number" class="form-control fw-bold fs-5" id="soTotalCost" readonly placeholder="0.00"></div></div><div class="mb-3 mt-3"><label for="soNotes" class="form-label">Notas Internas</label><textarea class="form-control" id="soNotes" rows="2"></textarea></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary" id="saveServiceOrderBtn">Guardar Orden</button></div></form></div></div>
     </div>
-            <!-- Modal de Detalles del Cliente -->
-        <div class="modal fade" id="clientDetailsModal" tabindex="-1" aria-labelledby="clientDetailsModalLabel" aria-hidden="true" data-client-id="">
-            <!-- ... (contenido modal header y body) ... -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary me-auto" onclick="scheduleServiceFromClientModal()"> <!-- Nuevo Botón -->
-                   <i class="fas fa-tools me-1"></i> Agendar Servicio
-                </button>
-                <button type="button" class="btn btn-outline-primary" onclick="exportClientToPdf()">
-                    <i class="fas fa-file-pdf me-1"></i> PDF
-                </button>
-                <button type="button" class="btn btn-outline-success" onclick="exportClientToCsv()">
-                    <i class="fas fa-file-csv me-1"></i> CSV
-                </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-        <!-- Modal de Detalles del Cliente -->
-        <div class="modal fade" id="clientDetailsModal" tabindex="-1" aria-labelledby="clientDetailsModalLabel" aria-hidden="true" data-client-id="">
-            <!-- ... (contenido modal header y body) ... -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary me-auto" onclick="scheduleServiceFromClientModal()"> <!-- Nuevo Botón -->
-                    <i class="fas fa-tools me-1"></i> Agendar Servicio
-                </button>
-                <button type="button" class="btn btn-outline-primary" onclick="exportClientToPdf()">
-                    <i class="fas fa-file-pdf me-1"></i> PDF
-                </button>
-                <button type="button" class="btn btn-outline-success" onclick="exportClientToCsv()">
-                    <i class="fas fa-file-csv me-1"></i> CSV
-                </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/babel">

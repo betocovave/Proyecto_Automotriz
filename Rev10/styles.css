@@ -1,0 +1,700 @@
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa; /* Fondo general claro */
+    transition: background-color 0.3s, color 0.3s;
+    font-size: 0.95rem;
+}
+
+/* Estilos del sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    transition: background-color 0.3s, color 0.3s; /* Transición para el color del sidebar */
+    width: 230px;
+    display: flex;
+    flex-direction: column;
+    background-color: #e9ecef; /* GRIS CLARO PARA EL SIDEBAR EN MODO CLARO */
+}
+
+/* Sidebar en modo oscuro */
+body.dark-mode .sidebar {
+    background-color: #343a40 !important; /* Fondo oscuro para sidebar en modo oscuro */
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+}
+
+.sidebar .position-sticky {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-top: 1rem;
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #495057; /* TEXTO MÁS OSCURO PARA BUENA LEGIBILIDAD EN SIDEBAR CLARO */
+    padding: 0.6rem 1rem;
+    margin: 0.1rem 0.5rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+}
+/* Color de texto para sidebar en modo oscuro */
+body.dark-mode .sidebar .nav-link {
+     color: #adb5bd; /* Texto claro para sidebar oscuro */
+}
+
+.sidebar .nav-link i.fa-fw {
+    margin-right: 0.75rem;
+    width: 1.25em;
+    text-align: center;
+}
+
+/* Hover en sidebar claro */
+body:not(.dark-mode) .sidebar .nav-link:hover {
+    background-color: rgba(13, 110, 253, 0.1); /* Azul VW suave para hover */
+    color: #0a58ca; /* Azul VW oscuro para texto hover */
+}
+/* Hover en sidebar oscuro */
+body.dark-mode .sidebar .nav-link:hover {
+    background-color: rgba(13, 110, 253, 0.15); /* Azul VW suave para hover (un poco más opaco) */
+    color: #fff; /* Texto blanco para hover en sidebar oscuro */
+}
+
+/* Activo en sidebar (ambos modos) */
+.sidebar .nav-link.active {
+    background-color: #0d6efd; /* Azul VW primario para activo */
+    color: #fff !important; /* Texto blanco para activo */
+    font-weight: 600;
+}
+
+.sidebar .user-info {
+    color: #333; /* Color de texto para info de usuario en sidebar claro */
+    border-bottom: 1px solid #ddd; /* Línea divisoria sutil */
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+body.dark-mode .sidebar .user-info {
+    color: #f8f9fa !important;
+    border-bottom-color: #495057 !important;
+}
+/* No se necesita .sidebar .user-info hr si ya está en el div */
+
+.sidebar-bottom {
+    padding: 1rem 1rem;
+    margin-top: auto;
+    border-top: 1px solid #ddd; /* Separador en light mode */
+}
+body.dark-mode .sidebar-bottom {
+    border-top-color: #495057;
+}
+
+/* Switch de modo oscuro en sidebar claro */
+body:not(.dark-mode) .sidebar .form-check-label {
+    color: #495057; /* Texto oscuro para el label en sidebar claro */
+}
+/* Texto del switch en sidebar oscuro (ya cubierto por .text-light en index.html) */
+
+
+/* Main content area */
+main {
+    margin-left: 230px;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+/* Estilos de las tarjetas */
+.card {
+    border: 1px solid #dee2e6;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.075);
+}
+
+.card-header {
+    background-color: #f8f9fa; 
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-title {
+    margin-bottom: 0.5rem;
+}
+
+.card-body {
+     padding: 1rem;
+}
+
+
+/* Estilos de las tablas */
+.table {
+    background-color: white;
+    margin-bottom: 0; 
+    font-size: 0.9rem;
+}
+
+.table thead th {
+    background-color: #e9ecef;
+    border-bottom: 2px solid #dee2e6;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    white-space: nowrap;
+    font-weight: 600;
+    vertical-align: middle;
+    padding: 0.75rem;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    padding: 0.75rem;
+}
+
+.table-responsive {
+    border-radius: 0.375rem;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+}
+.card-body.p-0 .table-responsive {
+    border: none;
+    border-radius: 0;
+}
+
+
+.table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+.table-warning,
+tr.table-warning > th,
+tr.table-warning > td {
+    background-color: #fff3cd !important;
+}
+.table-danger,
+tr.table-danger > th,
+tr.table-danger > td  {
+     background-color: #f8d7da !important;
+}
+
+
+/* Estilos del modo oscuro */
+body.dark-mode {
+    background-color: #212529;
+    color: #dee2e6;
+}
+
+body.dark-mode .card {
+    background-color: #343a40;
+    color: #dee2e6;
+    border-color: #495057;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .card-header {
+    background-color: #495057;
+    border-bottom: 1px solid #6c757d;
+}
+
+body.dark-mode .table {
+    background-color: #343a40;
+    color: #dee2e6;
+    border-color: #495057;
+}
+
+body.dark-mode .table thead th {
+    background-color: #495057;
+    color: #f8f9fa;
+    border-bottom: 2px solid #6c757d;
+}
+
+body.dark-mode .table tbody td {
+    border-color: #495057;
+}
+
+body.dark-mode .table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.075);
+}
+
+body.dark-mode .table-warning,
+body.dark-mode tr.table-warning > th,
+body.dark-mode tr.table-warning > td {
+    background-color: #4d3b00 !important;
+    color: #ffecb3;
+}
+body.dark-mode .table-danger,
+body.dark-mode tr.table-danger > th,
+body.dark-mode tr.table-danger > td {
+     background-color: #5a161c !important;
+     color: #f5c6cb;
+}
+
+body.dark-mode .modal-content {
+    background-color: #343a40;
+    color: #dee2e6;
+    border-color: #495057;
+}
+body.dark-mode .modal-header, body.dark-mode .modal-footer {
+    background-color: #495057;
+    border-color: #6c757d;
+}
+body.dark-mode .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #495057;
+    border-color: #6c757d;
+    color: #dee2e6;
+}
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+     background-color: #495057;
+     border-color: #80bdff;
+     color: #dee2e6;
+     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+body.dark-mode .form-control::placeholder {
+     color: #adb5bd;
+}
+body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator,
+body.dark-mode input[type="month"]::-webkit-calendar-picker-indicator,
+body.dark-mode input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+
+body.dark-mode .list-group-item {
+    background-color: #343a40;
+    color: #dee2e6;
+    border-color: #495057;
+}
+body.dark-mode .list-group-item.list-group-item-warning {
+    background-color: #332701 !important; /* Ensure it overrides general dark mode list item */
+    color: #ffda6a;
+    border-color: #594602;
+}
+body.dark-mode .list-group-item-info { 
+    background-color: #032830 !important;
+    color: #9eeaf9;
+    border-color: #05404a;
+}
+body.dark-mode .list-group-item-danger {
+    background-color: #2c0b0e !important;
+    color: #ea868f;
+    border-color: #58151c;
+}
+
+
+body.dark-mode .text-muted {
+    color: #adb5bd !important;
+}
+
+body.dark-mode hr, body.dark-mode .border-bottom {
+    border-color: #495057 !important;
+}
+body.dark-mode .bg-info-subtle {
+    background-color: #0a363e !important;
+}
+
+
+/* Estilos de los botones */
+.btn {
+    transition: all 0.2s ease-in-out;
+    font-weight: 500;
+}
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+.table td .btn {
+    margin-right: 0.2rem;
+}
+
+/* Estilos de los formularios */
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-range::-webkit-slider-thumb {
+    background-color: #0d6efd;
+}
+.form-range::-moz-range-thumb {
+     background-color: #0d6efd;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tab-content {
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* Estilos para algoritmo predictivo (React Component) */
+.alert-info {
+    background-color: #cff4fc;
+    border-color: #b6effb;
+    color: #055160;
+}
+body.dark-mode .alert-info {
+    background-color: #032830;
+    border-color: #05404a;
+    color: #9eeaf9;
+}
+.alert-warning {
+     background-color: #fff3cd;
+     border-color: #ffecb5;
+     color: #664d03;
+}
+body.dark-mode .alert-warning {
+    background-color: #332701;
+    border-color: #594602;
+    color: #ffda6a;
+}
+.alert-success {
+    background-color: #d1e7dd;
+    border-color: #badbcc;
+    color: #0f5132;
+}
+body.dark-mode .alert-success {
+    background-color: #051b11;
+    border-color: #0a3622;
+    color: #75b798;
+}
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+    color: #842029;
+}
+body.dark-mode .alert-danger {
+    background-color: #2c0b0e;
+    border-color: #58151c;
+    color: #ea868f;
+}
+
+
+/* Estilos para gráficos */
+.chart-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+canvas {
+    display: block;
+    max-width: 100%;
+}
+
+/* Estilos para el calendario */
+.calendar-container {
+    margin-top: 1rem;
+    overflow-x: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    background-color: #fff;
+}
+body.dark-mode .calendar-container {
+     border-color: #495057;
+     background-color: #343a40;
+}
+
+.calendar-table {
+    width: 100%;
+    min-width: 800px;
+    border-collapse: separate;
+    border-spacing: 2px;
+    table-layout: fixed;
+}
+
+.calendar-table th, .calendar-table td {
+    border: 1px solid #dee2e6;
+    padding: 0.25rem;
+    height: 110px;
+    vertical-align: top;
+    text-align: left;
+    position: relative;
+    border-radius: 0.25rem;
+}
+body.dark-mode .calendar-table th, body.dark-mode .calendar-table td {
+     border-color: #495057;
+}
+
+.calendar-table th {
+    background-color: #f8f9fa;
+    text-align: center;
+    font-weight: 600;
+    padding: 0.5rem 0.25rem;
+}
+body.dark-mode .calendar-table th {
+     background-color: #495057;
+}
+
+.calendar-day {
+    overflow-y: auto;
+    max-height: 100px;
+}
+.day-number {
+    font-size: 0.8rem;
+    font-weight: bold;
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    color: #6c757d;
+    background-color: rgba(255,255,255,0.7);
+    padding: 1px 3px;
+    border-radius: 3px;
+}
+body.dark-mode .day-number {
+    color: #adb5bd;
+    background-color: rgba(0,0,0,0.3);
+}
+.other-month .day-number {
+    opacity: 0.5;
+}
+.other-month {
+    background-color: #f8f9fa;
+}
+body.dark-mode .other-month {
+    background-color: #2c3034;
+}
+
+
+.appointment-card {
+    background-color: #e3f2fd;
+    border-radius: 4px;
+    padding: 0.25rem 0.4rem;
+    margin-bottom: 0.25rem;
+    font-size: 0.75rem;
+    border-left: 3px solid #1976d2;
+    transition: all 0.2s;
+    cursor: default;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.appointment-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+.appointment-card small { display: block; white-space: normal; }
+.appointment-card strong { font-weight: 600;}
+
+.appointment-card.pendiente { background-color: #fff3e0; border-left-color: #f57c00; }
+.appointment-card.completada { background-color: #e8f5e9; border-left-color: #43a047; }
+.appointment-card.cancelada { background-color: #ffebee; border-left-color: #e53935; text-decoration: line-through; }
+
+body.dark-mode .appointment-card { background-color: #263238; border-left-color: #1976d2; color: #eceff1; }
+body.dark-mode .appointment-card.pendiente { background-color: #3e2723; border-left-color: #f57c00; }
+body.dark-mode .appointment-card.completada { background-color: #1b5e20; border-left-color: #43a047; }
+body.dark-mode .appointment-card.cancelada { background-color: #b71c1c; border-left-color: #e53935; }
+
+/* Estilos para el inventario */
+.stock-alert {
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+/* Estilos responsivos */
+@media (max-width: 992px) { }
+
+@media (max-width: 767.98px) {
+    .sidebar {
+        position: static;
+        height: auto;
+        padding-top: 0;
+        width: 100%;
+        box-shadow: 0 1px 2px rgba(0,0,0,.1);
+        margin-bottom: 1rem;
+        flex-direction: row;
+        overflow-x: auto;
+    }
+    .sidebar .position-sticky {
+        position: static !important;
+        padding-top: 0 !important;
+        flex-direction: row;
+        overflow-y: hidden;
+    }
+    .sidebar .nav {
+         flex-direction: row;
+         flex-wrap: nowrap;
+    }
+     .sidebar .nav-link {
+         margin: 0.2rem;
+         white-space: nowrap;
+     }
+     .sidebar .nav-link.active::before {
+         display: none;
+     }
+     .sidebar .user-info, .sidebar .sidebar-bottom {
+         display: none;
+     }
+
+    main {
+        margin-left: 0 !important;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+}
+
+/* Animación de carga */
+.loading-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border-left-color: #0d6efd;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+}
+body.dark-mode .loading-spinner {
+     border-color: rgba(255, 255, 255, 0.1);
+     border-left-color: #0d6efd;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Estilos para reportes */
+#reportContent {
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+body.dark-mode #reportContent {
+     background-color: #343a40;
+     border-color: #495057;
+}
+
+#reportContent h4 {
+    color: #0d6efd;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+body.dark-mode #reportContent h4 {
+     border-bottom-color: #495057;
+}
+#reportContent h5 {
+     margin-top: 1.5rem;
+     margin-bottom: 0.75rem;
+}
+#reportContent p {
+     margin-bottom: 0.5rem;
+}
+#reportContent table {
+    margin-top: 1rem;
+}
+
+
+/* Estilos para la gestión de vehículos */
+#vehicleDetails, #vehicleSearchResults {
+    margin-top: 1rem;
+}
+#vehicleSearchResults .list-group-item {
+    font-size: 0.9rem;
+}
+
+
+.vehicle-info-card {
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #dee2e6;
+}
+body.dark-mode .vehicle-info-card {
+     background-color: #495057;
+     border-color: #6c757d;
+}
+
+.vehicle-info-card h6 {
+    color: #0d6efd;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+/* Estilos para modales */
+.modal-content {
+    border-radius: 0.5rem;
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    border-bottom: 1px solid #dee2e6;
+    padding: 1rem 1.5rem;
+}
+.modal-title {
+     font-weight: 600;
+}
+
+.modal-body {
+     padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 0.75rem 1.5rem;
+}
+body.dark-mode .modal-header, body.dark-mode .modal-footer {
+    border-color: #495057;
+}
+
+.modal-body {
+    max-height: 75vh;
+    overflow-y: auto;
+}
